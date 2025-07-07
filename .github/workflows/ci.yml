@@ -1,0 +1,21 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - run: |
+          git pull origin main
+          /home/actions-runner/venv/bin/mkdocs gh-deploy --force
+          sudo rsync -a --delete site/ /root/oaix.tech/uv/site/
+          sudo nginx -s reload
+        env:
+          UV_ANALYTICS_PROVIDER: ${{ secrets.ANALYTICS_PROVIDER }}
+          UV_GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
+          UV_CLARITY_PROJECT_ID: ${{ secrets.CLARITY_PROJECT_ID }}
+          PROD: true

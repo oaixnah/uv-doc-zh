@@ -1,0 +1,190 @@
+site_name: uv 中文文档
+copyright: <a href="https://github.com/oaixnah" target="_blank">译者 oaixnah</a>
+theme:
+  name: material
+  logo: assets/logo-letter.svg
+  favicon: assets/favicon.ico
+  language: zh
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - content.tabs.link
+    - navigation.path
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - navigation.tabs
+    - navigation.expand
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - search.share
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: astral-light
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: astral-dark
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  custom_dir: docs/.overrides
+repo_url: https://github.com/astral-sh/uv
+repo_name: uv
+site_author: charliermarsh & oaixnah
+site_url: https://uv.oaix.tech
+site_description: 一个用 Rust 编写的极速 Python 包和项目管理器。
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.snippets:
+  - pymdownx.magiclink:
+  - attr_list:
+  - toc:
+      anchorlink: true
+      anchorlink_class: "toclink"
+  - md_in_html:
+  - pymdownx.inlinehilite:
+  - pymdownx.superfences:
+  - markdown.extensions.attr_list:
+  - pymdownx.blocks.caption
+  - pymdownx.keys:
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+plugins:
+  - search
+extra_css:
+  - stylesheets/extra.css
+extra:
+  analytics:
+    provider: !ENV UV_ANALYTICS_PROVIDER
+    property: !ENV UV_GOOGLE_ANALYTICS_KEY
+    clarity: !ENV UV_CLARITY_PROJECT_ID
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/astral-sh/uv
+    - icon: fontawesome/brands/discord
+      link: https://discord.com/invite/astral-sh
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/uv/
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/astral_sh
+nav:
+  - 介绍: index.md
+  - 入门:
+      - getting-started/index.md
+      - 安装: getting-started/installation.md
+      - 第一步: getting-started/first-steps.md
+      - 功能概述: getting-started/features.md
+      - 获取帮助: getting-started/help.md
+  - 使用指南:
+      - guides/index.md
+      - 安装 Python: guides/install-python.md
+      - 脚本: guides/scripts.md
+      - 工具: guides/tools.md
+      - 项目: guides/projects.md
+      - 构建和发布包: guides/package.md
+      - 迁移:
+          - guides/migration/index.md
+          - 从 pip 迁移到 uv 项目: guides/migration/pip-to-project.md
+      - 集成:
+          - guides/integration/index.md
+          - Docker: guides/integration/docker.md
+          - Jupyter: guides/integration/jupyter.md
+          - marimo: guides/integration/marimo.md
+          - GitHub Actions: guides/integration/github.md
+          - GitLab CI/CD: guides/integration/gitlab.md
+          - Pre-commit: guides/integration/pre-commit.md
+          - PyTorch: guides/integration/pytorch.md
+          - FastAPI: guides/integration/fastapi.md
+          - Alternative indexes: guides/integration/alternative-indexes.md
+          - Dependency bots: guides/integration/dependency-bots.md
+          - AWS Lambda: guides/integration/aws-lambda.md
+  - 概念:
+      - concepts/index.md
+      - 项目:
+          - concepts/projects/index.md
+          - 结构和文件: concepts/projects/layout.md
+          - 创建: concepts/projects/init.md
+          - 管理依赖: concepts/projects/dependencies.md
+          - 运行命令: concepts/projects/run.md
+          - 锁定与同步: concepts/projects/sync.md
+          - 配置: concepts/projects/config.md
+          - 构建分发版: concepts/projects/build.md
+          - 使用工作区: concepts/projects/workspaces.md
+      - 工具: concepts/tools.md
+      - Python 版本: concepts/python-versions.md
+      - 配置文件: concepts/configuration-files.md
+      - 包索引: concepts/indexes.md
+      - 解析: concepts/resolution.md
+      - 构建后端: concepts/build-backend.md
+      - 认证: concepts/authentication.md
+      - 缓存: concepts/cache.md
+      # Note:  The `pip` section was moved to the `concepts/` section but the
+      # top-level directory structure was retained to ease the transition.
+      - pip 接口:
+          - pip/index.md
+          - 使用 Python 环境: pip/environments.md
+          - 管理包: pip/packages.md
+          - 检查环境: pip/inspection.md
+          - 声明依赖项: pip/dependencies.md
+          - 锁定环境: pip/compile.md
+          - 与 `pip` 的兼容性: pip/compatibility.md
+  - 参考:
+      - reference/index.md
+      - 命令:
+          - reference/cli/index.md
+          - uv run: reference/cli/run.md
+          - uv init: reference/cli/init.md
+          - uv add: reference/cli/add.md
+          - uv remove: reference/cli/remove.md
+          - uv version: reference/cli/version.md
+          - uv sync: reference/cli/sync.md
+          - uv lock: reference/cli/lock.md
+          - uv export: reference/cli/export.md
+          - uv tree: reference/cli/tree.md
+          - uv tool: reference/cli/tool.md
+          - uv python: reference/cli/python.md
+          - uv pip: reference/cli/pip.md
+          - uv venv: reference/cli/venv.md
+          - uv build: reference/cli/build.md
+          - uv publish: reference/cli/publish.md
+          - uv cache: reference/cli/cache.md
+          - uv self: reference/cli/self.md
+          - uv shell: reference/cli/generate-shell-completion.md
+          - uv help: reference/cli/help.md
+      - 设置:
+          - reference/settings/index.md
+          - 项目元数据: reference/settings/project-metadata.md
+          - 配置: reference/settings/configuration.md
+      - 环境变量: reference/environment.md
+      - 安装程序: reference/installer.md
+      - 排除故障:
+          - reference/troubleshooting/index.md
+          - 构建失败: reference/troubleshooting/build-failures.md
+          - 可复现的例子: reference/troubleshooting/reproducible-examples.md
+      - 解析器: reference/resolver-internals.md
+      - 基准测试: reference/benchmarks.md
+      - 政策:
+          - reference/policies/index.md
+          - 版本控制: reference/policies/versioning.md
+          - 平台支持: reference/policies/platforms.md
+          - License: reference/policies/license.md
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
