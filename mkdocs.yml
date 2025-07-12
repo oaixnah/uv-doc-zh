@@ -68,6 +68,9 @@ markdown_extensions:
       alternate_style: true
 plugins:
   - search
+  - blog:
+      authors_profiles: true
+      authors_file: "{blog}/.authors.yaml"
 extra_css:
   - stylesheets/extra.css
 extra:
@@ -185,3 +188,5 @@ nav:
           - 版本控制: reference/policies/versioning.md
           - 平台支持: reference/policies/platforms.md
           - License: reference/policies/license.md
+  - 使用经验:
+      - blog/index.md
