@@ -17,6 +17,7 @@ theme:
     - navigation.top
     - navigation.footer
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.expand
     - navigation.tracking
     - search.suggest
@@ -184,7 +185,3 @@ nav:
           - 版本控制: reference/policies/versioning.md
           - 平台支持: reference/policies/platforms.md
           - License: reference/policies/license.md
-validation:
-  omitted_files: warn
-  absolute_links: warn
-  unrecognized_links: warn
