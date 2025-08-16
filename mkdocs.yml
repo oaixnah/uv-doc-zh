@@ -87,6 +87,7 @@ extra:
       link: https://pypi.org/project/uv/
     - icon: fontawesome/brands/x-twitter
       link: https://x.com/astral_sh
+  comments: true
 nav:
   - 介绍: index.md
   - 入门:
@@ -190,3 +191,5 @@ nav:
           - License: reference/policies/license.md
   - 译者经验:
       - blog/index.md
+  - 反馈:
+      - feedback.md
