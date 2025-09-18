@@ -84,7 +84,7 @@ $ uv run fastapi dev
 在第一阶段，我们将所有应用程序代码和依赖项填充到一个目录中。在第二阶段，我们会将这个目录复制到最终镜像中，并省略构建工具和其他不必要的文件。
 
 ```dockerfile title="Dockerfile"
-FROM ghcr.io/astral-sh/uv:0.7.19 AS uv
+FROM ghcr.io/astral-sh/uv:0.8.18 AS uv
 
 # First, bundle the dependencies into the task root.
 FROM public.ecr.aws/lambda/python:3.13 AS builder
@@ -311,7 +311,7 @@ $ uv run fastapi dev
 最后，我们将更新 Dockerfile 以在部署包中包含本地库：
 
 ```dockerfile title="Dockerfile"
-FROM ghcr.io/astral-sh/uv:0.7.19 AS uv
+FROM ghcr.io/astral-sh/uv:0.8.18 AS uv
 
 # First, bundle the dependencies into the task root.
 FROM public.ecr.aws/lambda/python:3.13 AS builder

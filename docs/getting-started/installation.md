@@ -29,7 +29,7 @@ uv 提供了一个独立的安装程序来下载和安装 uv：
     通过在 URL 中包含版本号来请求特定版本：
 
     ```console
-    $ curl -LsSf https://astral.sh/uv/0.7.19/install.sh | sh
+    $ curl -LsSf https://astral.sh/uv/0.8.18/install.sh | sh
     ```
 
 === "Windows"
@@ -45,7 +45,7 @@ uv 提供了一个独立的安装程序来下载和安装 uv：
     通过在 URL 中包含版本号来请求特定版本：
 
     ```pwsh-session
-    PS> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/0.7.19/install.ps1 | iex"
+    PS> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/0.8.18/install.ps1 | iex"
     ```
 
 !!! tip

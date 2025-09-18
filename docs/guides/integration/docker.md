@@ -25,8 +25,8 @@ $ docker run --rm -it ghcr.io/astral-sh/uv:debian uv --help
 提供以下 distroless 镜像：
 
 - `ghcr.io/astral-sh/uv:latest`
-- `ghcr.io/astral-sh/uv:{major}.{minor}.{patch}`，例如 `ghcr.io/astral-sh/uv:0.7.19`
-- `ghcr.io/astral-sh/uv:{major}.{minor}`，例如 `ghcr.io/astral-sh/uv:0.7` (最新的补丁版本)
+- `ghcr.io/astral-sh/uv:{major}.{minor}.{patch}`，例如 `ghcr.io/astral-sh/uv:0.8.18`
+- `ghcr.io/astral-sh/uv:{major}.{minor}`，例如 `ghcr.io/astral-sh/uv:0.8` (最新的补丁版本)
 
 并提供以下派生镜像：
 
@@ -66,7 +66,7 @@ $ docker run --rm -it ghcr.io/astral-sh/uv:debian uv --help
     - `ghcr.io/astral-sh/uv:python3.8-bookworm-slim`
 <!-- prettier-ignore-end -->
 
-与 distroless 镜像一样，每个派生镜像都以 `ghcr.io/astral-sh/uv:{major}.{minor}.{patch}-{base}` 和 `ghcr.io/astral-sh/uv:{major}.{minor}-{base}` 的形式发布 uv 版本标签，例如 `ghcr.io/astral-sh/uv:0.7.19-alpine`。
+与 distroless 镜像一样，每个派生镜像都以 `ghcr.io/astral-sh/uv:{major}.{minor}.{patch}-{base}` 和 `ghcr.io/astral-sh/uv:{major}.{minor}-{base}` 的形式发布 uv 版本标签，例如 `ghcr.io/astral-sh/uv:0.8.18-alpine`。
 
 更多详情，请参阅 [GitHub Container](https://github.com/astral-sh/uv/pkgs/container/uv) 页面。
 
@@ -102,7 +102,7 @@ ENV PATH="/root/.local/bin/:$PATH"
 在任何一种情况下，最佳实践是固定到特定的 uv 版本，例如：
 
 ```dockerfile
-COPY --from=ghcr.io/astral-sh/uv:0.7.19 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.8.18 /uv /uvx /bin/
 ```
 
 !!! tip
@@ -117,7 +117,7 @@ COPY --from=ghcr.io/astral-sh/uv:0.7.19 /uv /uvx /bin/
 或者，使用安装程序：
 
 ```dockerfile
-ADD https://astral.sh/uv/0.7.19/install.sh /uv-installer.sh
+ADD https://astral.sh/uv/0.8.18/install.sh /uv-installer.sh
 ```
 
 ### 安装项目
@@ -492,4 +492,4 @@ Verified OK
 
 !!! tip
 
-    这些示例使用 `latest`，但最佳实践是验证特定版本标签的证明，例如 `ghcr.io/astral-sh/uv:0.7.19`，或者（甚至更好）特定的镜像摘要，例如 `ghcr.io/astral-sh/uv:0.5.27@sha256:5adf09a5a526f380237408032a9308000d14d5947eafa687ad6c6a2476787b4f`。
+    这些示例使用 `latest`，但最佳实践是验证特定版本标签的证明，例如 `ghcr.io/astral-sh/uv:0.8.18`，或者（甚至更好）特定的镜像摘要，例如 `ghcr.io/astral-sh/uv:0.8.18@sha256:5adf09a5a526f380237408032a9308000d14d5947eafa687ad6c6a2476787b4f`。

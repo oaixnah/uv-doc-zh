@@ -15,7 +15,7 @@ description: 一份关于如何将 uv 与 pre-commit 结合使用的指南，用
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv 版本。
-    rev: 0.7.19
+    rev: 0.8.18
     hooks:
       - id: uv-lock
 ```
@@ -26,7 +26,7 @@ repos:
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv 版本。
-    rev: 0.7.19
+    rev: 0.8.18
     hooks:
       - id: uv-export
 ```
@@ -37,7 +37,7 @@ repos:
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv 版本。
-    rev: 0.7.19
+    rev: 0.8.18
     hooks:
       # 编译需求
       - id: pip-compile
@@ -50,7 +50,7 @@ repos:
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv 版本。
-    rev: 0.7.19
+    rev: 0.8.18
     hooks:
       # 编译需求
       - id: pip-compile
@@ -64,7 +64,7 @@ repos:
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv 版本。
-    rev: 0.7.19
+    rev: 0.8.18
     hooks:
       # 编译需求
       - id: pip-compile
