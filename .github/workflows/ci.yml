@@ -9,6 +9,7 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
+      - uses: actions/checkout@v4
       - run: |
           git pull origin main
           /home/actions-runner/venv/bin/mkdocs gh-deploy --force
