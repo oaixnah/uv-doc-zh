@@ -139,8 +139,6 @@ nav:
       - 构建后端: concepts/build-backend.md
       - 认证: concepts/authentication.md
       - 缓存: concepts/cache.md
-      # Note:  The `pip` section was moved to the `concepts/` section but the
-      # top-level directory structure was retained to ease the transition.
       - pip 接口:
           - pip/index.md
           - 使用 Python 环境: pip/environments.md
