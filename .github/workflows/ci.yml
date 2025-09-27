@@ -16,9 +16,9 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
       - name: Install dependencies
-        run: uv sync
+        run: ~/.local/bin/uv sync
       - name: Build
-        run: uv run mkdocs gh-deploy --force
+        run: ~/.local/bin/uv run mkdocs gh-deploy --force
         env:
           UV_ANALYTICS_PROVIDER: ${{ secrets.ANALYTICS_PROVIDER }}
           UV_GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
