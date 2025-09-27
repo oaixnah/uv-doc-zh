@@ -1,12 +1,21 @@
 [project]
 name = "uv-doc-zh"
 version = "0.1.0"
-description = "Add your description here"
+description = "一个用 Rust 编写的极其快速的 Python 包和项目管理器。"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "google-auth>=2.40.3",
+    "google-auth-oauthlib>=1.2.2",
     "mkdocs-llmstxt>=0.2.0",
     "mkdocs-material>=9.6.15",
     "mkdocs-redirects>=1.2.2",
     "mkdocs-static-i18n>=1.3.0",
+    "oauth2client>=4.1.3",
+    "requests>=2.32.4",
 ]
+
+[[tool.uv.index]]
+name = "tencentyun"
+url = "http://mirrors.tencentyun.com/pypi/simple"
+default = true
