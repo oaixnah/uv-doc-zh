@@ -69,7 +69,6 @@ markdown_extensions:
 plugins:
   - search
   - blog:
-      authors_profiles: true
       authors_file: "{blog}/.authors.yaml"
 extra_css:
   - stylesheets/extra.css
