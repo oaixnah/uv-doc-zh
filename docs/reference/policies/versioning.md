@@ -14,11 +14,11 @@ uv 的更新日志可以在 [GitHub 上查看](https://github.com/astral-sh/uv/b
 
 ## 缓存版本控制
 
-缓存版本被认为是 uv 的内部版本，因此可能会在次要版本或补丁版本中更改。更多信息请参阅[缓存版本控制](../../concepts/cache.md#cache-versioning)。
+缓存版本被认为是 uv 的内部版本，因此可能会在次要版本或补丁版本中更改。更多信息请参阅[缓存版本控制](../../concepts/cache.md#_7)。
 
 ## 锁文件版本控制
 
-`uv.lock` 模式版本被视为公共 API 的一部分，因此只会在次要版本中作为破坏性更改进行递增。更多信息请参阅[锁文件版本控制](../../concepts/resolution.md#lockfile-versioning)。
+`uv.lock` 模式版本被视为公共 API 的一部分，因此只会在次要版本中作为破坏性更改进行递增。更多信息请参阅[锁文件版本控制](../../concepts/resolution.md#_20)。
 
 ## 最低支持的 Rust 版本
 

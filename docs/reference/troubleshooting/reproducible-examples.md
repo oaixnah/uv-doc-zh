@@ -35,7 +35,7 @@ subtitle: Reproducible examples
 
 !!! note
 
-    使用 Docker 镜像仅在问题可在 Linux 上复现时才可行。在使用 macOS 时，最好确保你的镜像在 Linux 上是不可复现的，但有些 bug 确实是特定于操作系统的。虽然使用 Docker 运行 Windows 容器是可行的，但这并不常见。这类 bug 预计会以[脚本](#脚本)的形式报告。
+    使用 Docker 镜像仅在问题可在 Linux 上复现时才可行。在使用 macOS 时，最好确保你的镜像在 Linux 上是不可复现的，但有些 bug 确实是特定于操作系统的。虽然使用 Docker 运行 Windows 容器是可行的，但这并不常见。这类 bug 预计会以[脚本](#_5)的形式报告。
 
 在使用 uv 编写 Docker MRE 时，最好从 [uv 的 Docker 镜像](../../guides/integration/docker.md#_2)之一开始。这样做时，请务必固定到 uv 的特定版本。
 
@@ -99,7 +99,7 @@ uv sync
 uv run -v python -c "import pydantic"
 ```
 
-如果你的复现需要许多文件，请使用 [Git 仓库](#git-仓库)来分享它们。
+如果你的复现需要许多文件，请使用 [Git 仓库](#git)来分享它们。
 
 除了脚本之外，还应包括失败的_详细_日志（即带有 `-v` 标志）和完整的错误消息。
 

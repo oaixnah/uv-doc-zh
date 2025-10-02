@@ -13,7 +13,7 @@ uv 由 [Renovate](https://github.com/renovatebot/renovate) 支持。
 
 ### `uv.lock` 输出
 
-Renovate 使用 `uv.lock` 文件的存在来确定 uv 用于管理依赖项，并将建议对[项目依赖项](../../concepts/projects/dependencies.md#project-dependencies)、[可选依赖项](../../concepts/projects/dependencies.md#optional-dependencies)和[开发依赖项](../../concepts/projects/dependencies.md#development-dependencies)进行升级。Renovate 将同时更新 `pyproject.toml` 和 `uv.lock` 文件。
+Renovate 使用 `uv.lock` 文件的存在来确定 uv 用于管理依赖项，并将建议对[项目依赖项](../../concepts/projects/dependencies.md#_8)、[可选依赖项](../../concepts/projects/dependencies.md#_16)和[开发依赖项](../../concepts/projects/dependencies.md#_17)进行升级。Renovate 将同时更新 `pyproject.toml` 和 `uv.lock` 文件。
 
 锁文件也可以定期刷新（例如更新传递性依赖项），方法是启用 [`lockFileMaintenance`](https://docs.renovatebot.com/configuration-options/#lockfilemaintenance) 选项：
 
@@ -28,7 +28,7 @@ Renovate 使用 `uv.lock` 文件的存在来确定 uv 用于管理依赖项，�
 
 ### 内联脚本元数据
 
-Renovate 支持更新使用[脚本内联元数据](../scripts.md/#declaring-script-dependencies)定义的依赖项。
+Renovate 支持更新使用[脚本内联元数据](../scripts.md/#_2)定义的依赖项。
 
 由于它无法自动检测哪些 Python 文件使用脚本内联元数据，因此需要使用 [`fileMatch`](https://docs.renovatebot.com/configuration-options/#filematch) 明确定义它们的位置，如下所示：
 

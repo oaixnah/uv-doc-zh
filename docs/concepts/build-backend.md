@@ -25,7 +25,7 @@ uv 构建后端目前**只支持纯 Python 代码**。构建[带有扩展模块�
 
 ## 使用 uv 构建后端
 
-要在现有项目中使用 uv 作为构建后端，请将 `uv_build` 添加到 `pyproject.toml` 中的 [`[build-system]`](../concepts/projects/config.md#build-systems) 部分：
+要在现有项目中使用 uv 作为构建后端，请将 `uv_build` 添加到 `pyproject.toml` 中的 [`[build-system]`](../concepts/projects/config.md#_6) 部分：
 
 ```toml title="pyproject.toml"
 [build-system]
@@ -137,7 +137,7 @@ src
     └── __init__.pyi
 ```
 
-[命名空间包](#namespace-packages)也支持类型存根模块。
+[命名空间包](#_5)也支持类型存根模块。
 
 ## 文件包含和排除
 
@@ -150,25 +150,25 @@ src
 构建源发行版时，将包含以下文件和目录：
 
 - `pyproject.toml`
-- [`tool.uv.build-backend.module-root`](../reference/settings.md#build-backend_module-root) 下的[模块](#_4)。
+- [`tool.uv.build-backend.module-root`](../reference/settings/project-metadata.md#build-backend_module-root) 下的[模块](#_4)。
 - `project.license-files` 和 `project.readme` 引用的文件。
-- [`tool.uv.build-backend.data`](../reference/settings.md#build-backend_data) 下的所有目录。
-- 与 [`tool.uv.build-backend.source-include`](../reference/settings.md#build-backend_source-include) 中的模式匹配的所有文件。
+- [`tool.uv.build-backend.data`](../reference/settings/project-metadata.md#build-backend_data) 下的所有目录。
+- 与 [`tool.uv.build-backend.source-include`](../reference/settings/project-metadata.md#build-backend_source-include) 中的模式匹配的所有文件。
 
-从中删除与 [`tool.uv.build-backend.source-exclude`](../reference/settings.md#build-backend_source-exclude) 和
-[默认排除项](../reference/settings.md#build-backend_default-excludes)匹配的项目。
+从中删除与 [`tool.uv.build-backend.source-exclude`](../reference/settings/project-metadata.md#build-backend_source-exclude) 和
+[默认排除项](../reference/settings/project-metadata.md#build-backend_default-excludes)匹配的项目。
 
 构建 wheel 时，将包含以下文件和目录：
 
-- [`tool.uv.build-backend.module-root`](../reference/settings.md#build-backend_module-root) 下的[模块](#_4)
+- [`tool.uv.build-backend.module-root`](../reference/settings/project-metadata.md#build-backend_module-root) 下的[模块](#_4)
 - `project.license-files` 引用的文件，这些文件将复制到 `.dist-info` 目录中。
 - `project.readme`，它将复制到项目元数据中。
-- [`tool.uv.build-backend.data`](../reference/settings.md#build-backend_data) 下的所有目录，
+- [`tool.uv.build-backend.data`](../reference/settings/project-metadata.md#build-backend_data) 下的所有目录，
   这些目录将复制到 `.data` 目录中。
 
-从中删除 [`tool.uv.build-backend.source-exclude`](../reference/settings.md#build-backend_source-exclude)、[`tool.uv.build-backend.wheel-exclude`](../reference/settings.md#build-backend_wheel-exclude) 和默认排除项。应用源发行版排除项是为了避免从源树到 wheel 源的构建包含比从源树到源发行版到 wheel 的构建更多的文件。
+从中删除 [`tool.uv.build-backend.source-exclude`](../reference/settings/project-metadata.md#build-backend_source-exclude)、[`tool.uv.build-backend.wheel-exclude`](../reference/settings/project-metadata.md#build-backend_wheel-exclude) 和默认排除项。应用源发行版排除项是为了避免从源树到 wheel 源的构建包含比从源树到源发行版到 wheel 的构建更多的文件。
 
-没有特定的 wheel 包含项。只能有一个顶级模块，所有数据文件必须位于模块根目录下或适当的[数据目录](../reference/settings.md#build-backend_data)中。大多数包将小数据存储在模块根目录中，与源代码放在一起。
+没有特定的 wheel 包含项。只能有一个顶级模块，所有数据文件必须位于模块根目录下或适当的[数据目录](../reference/settings/project-metadata.md#build-backend_data)中。大多数包将小数据存储在模块根目录中，与源代码放在一起。
 
 ### 包含和排除语法
 

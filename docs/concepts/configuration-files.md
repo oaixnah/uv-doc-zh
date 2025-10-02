@@ -52,7 +52,7 @@ uv 还接受一个 `--config-file` 命令行参数，它接受一个 `uv.toml` �
 
 ## 设置
 
-有关可用设置的枚举，请参阅[设置参考](../reference/settings.md)。
+有关可用设置的枚举，请参阅[设置](../reference/settings/configuration.md)。
 
 ## `.env`
 
@@ -76,7 +76,7 @@ Hello, world!
 
 ## 配置 pip 接口
 
-提供了一个专用的 [`[tool.uv.pip]`](../reference/settings.md#pip) 部分，用于配置_仅_ `uv pip` 命令行界面。此部分中的设置不会应用于 `uv pip` 命名空间之外的 `uv` 命令。但是，此部分中的许多设置在顶级命名空间中都有对应的设置，这些设置_确实_适用于 `uv pip` 接口，除非它们被 `uv.pip` 部分中的值覆盖。
+提供了一个专用的 [`[tool.uv.pip]`](../pip/index.md) 部分，用于配置_仅_ `uv pip` 命令行界面。此部分中的设置不会应用于 `uv pip` 命名空间之外的 `uv` 命令。但是，此部分中的许多设置在顶级命名空间中都有对应的设置，这些设置_确实_适用于 `uv pip` 接口，除非它们被 `uv.pip` 部分中的值覆盖。
 
 `uv.pip` 设置旨在与 pip 的接口紧密保持一致，并单独声明以保持兼容性，同时允许全局设置使用替代设计（例如 `--no-build`）。
 

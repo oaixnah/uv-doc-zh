@@ -191,7 +191,7 @@ jobs:
 
 !!! tip
 
-    [`UV_PROJECT_ENVIRONMENT` 设置](../../concepts/projects/config.md#project-environment-path) 可用于安装到系统 Python 环境，而不是创建虚拟环境。
+    [`UV_PROJECT_ENVIRONMENT` 设置](../../concepts/projects/config.md#_9) 可用于安装到系统 Python 环境，而不是创建虚拟环境。
 
 ## 缓存
 
@@ -334,7 +334,7 @@ steps:
 
 在创建具有对私有仓库的读取访问权限的 PAT 后，将其添加为[仓库机密]。
 
-然后，您可以使用 [`gh`](https://cli.github.com/) CLI（默认安装在 GitHub Actions 运行器中）为 Git 配置一个[凭据帮助程序](../../concepts/authentication.md#git-credential-helpers)，以使用 PAT 查询托管在 `github.com` 上的仓库。
+然后，您可以使用 [`gh`](https://cli.github.com/) CLI（默认安装在 GitHub Actions 运行器中）为 Git 配置一个[凭据帮助程序](../../concepts/authentication.md#git_1)，以使用 PAT 查询托管在 `github.com` 上的仓库。
 
 例如，如果您将仓库机密命名为 `MY_PAT`：
 

@@ -10,7 +10,7 @@ description:
 
 !!! important
 
-    如果使用 pip 接口，请阅读关于在 uv 中[使用多个索引](../../pip/compatibility.md#packages-that-exist-on-multiple-indexes)的文档 — 默认行为与 pip 不同，以防止依赖混淆攻击，但这意味着 uv 可能无法像您预期的那样找到包的版本。
+    如果使用 pip 接口，请阅读关于在 uv 中[使用多个索引](../../pip/compatibility.md#_3)的文档 — 默认行为与 pip 不同，以防止依赖混淆攻击，但这意味着 uv 可能无法像您预期的那样找到包的版本。
 
 ## Azure Artifacts
 
@@ -45,7 +45,7 @@ export UV_INDEX_PRIVATE_REGISTRY_PASSWORD="$AZURE_ARTIFACTS_TOKEN"
 
 `artifacts-keyring` 插件包装了 [Azure Artifacts Credential Provider 工具](https://github.com/microsoft/artifacts-credprovider)。凭据提供程序支持几种不同的身份验证模式，包括交互式登录 — 有关配置信息，请参阅[该工具的文档](https://github.com/microsoft/artifacts-credprovider)。
 
-uv 仅支持在[子进程模式](../../reference/settings.md#keyring-provider)下使用 `keyring` 包。`keyring` 可执行文件必须在 `PATH` 中，即全局安装或在活动环境中安装。`keyring` CLI 需要 URL 中的用户名，并且必须是 `VssSessionToken`。
+uv 仅支持在[子进程模式](../../reference/settings/configuration.md#keyring-provider)下使用 `keyring` 包。`keyring` 可执行文件必须在 `PATH` 中，即全局安装或在活动环境中安装。`keyring` CLI 需要 URL 中的用户名，并且必须是 `VssSessionToken`。
 
 ```bash
 # 从公共 PyPI 预安装 keyring 和 Artifacts 插件
@@ -60,7 +60,7 @@ export UV_INDEX_PRIVATE_REGISTRY_USERNAME=VssSessionToken
 
 !!! note
 
-    可以使用 [`tool.uv.keyring-provider`](../../reference/settings.md#keyring-provider) 设置在您的 `uv.toml` 或 `pyproject.toml` 中启用 keyring。
+    可以使用 [`tool.uv.keyring-provider`](../../reference/settings/configuration.md#keyring-provider) 设置在您的 `uv.toml` 或 `pyproject.toml` 中启用 keyring。
 
     同样，索引的用户名可以直接添加到索引 URL 中。
 
@@ -148,7 +148,7 @@ export UV_INDEX_PRIVATE_REGISTRY_PASSWORD="$ARTIFACT_REGISTRY_TOKEN"
 
 `keyrings.google-artifactregistry-auth` 插件包装 [gcloud CLI](https://cloud.google.com/sdk/gcloud) 以生成短期访问令牌，将它们安全地存储在系统密钥环中，并在它们过期时刷新它们。
 
-uv 仅支持在[子进程模式](../../reference/settings.md#keyring-provider)下使用 `keyring` 包。`keyring` 可执行文件必须在 `PATH` 中，即全局安装或在活动环境中安装。`keyring` CLI 需要 URL 中的用户名，并且必须是 `oauth2accesstoken`。
+uv 仅支持在[子进程模式](../../reference/settings/configuration.md#keyring-provider)下使用 `keyring` 包。`keyring` 可执行文件必须在 `PATH` 中，即全局安装或在活动环境中安装。`keyring` CLI 需要 URL 中的用户名，并且必须是 `oauth2accesstoken`。
 
 ```bash
 # 从公共 PyPI 预安装 keyring 和 Artifact Registry 插件
@@ -163,7 +163,7 @@ export UV_INDEX_PRIVATE_REGISTRY_USERNAME=oauth2accesstoken
 
 !!! note
 
-    可以使用 [`tool.uv.keyring-provider`](../../reference/settings.md#keyring-provider) 设置在您的 `uv.toml` 或 `pyproject.toml` 中启用 keyring。
+    可以使用 [`tool.uv.keyring-provider`](../../reference/settings/configuration.md#keyring-provider) 设置在您的 `uv.toml` 或 `pyproject.toml` 中启用 keyring。
 
     同样，索引的用户名可以直接添加到索引 URL 中。
 
@@ -255,7 +255,7 @@ export UV_INDEX_PRIVATE_REGISTRY_PASSWORD="$AWS_CODEARTIFACT_TOKEN"
 
 `keyrings.codeartifact` 插件包装 [boto3](https://pypi.org/project/boto3/) 以生成短期访问令牌，将它们安全地存储在系统密钥环中，并在它们过期时刷新它们。
 
-uv 仅支持在[子进程模式](../../reference/settings.md#keyring-provider)下使用 `keyring` 包。`keyring` 可执行文件必须在 `PATH` 中，即全局安装或在活动环境中安装。`keyring` CLI 需要 URL 中的用户名，并且必须是 `aws`。
+uv 仅支持在[子进程模式](../../reference/settings/configuration.md#keyring-provider)下使用 `keyring` 包。`keyring` 可执行文件必须在 `PATH` 中，即全局安装或在活动环境中安装。`keyring` CLI 需要 URL 中的用户名，并且必须是 `aws`。
 
 ```bash
 # 从公共 PyPI 预安装 keyring 和 AWS CodeArtifact 插件
@@ -270,7 +270,7 @@ export UV_INDEX_PRIVATE_REGISTRY_USERNAME=aws
 
 !!! note
 
-    可以使用 [`tool.uv.keyring-provider`](../../reference/settings.md#keyring-provider) 设置在您的 `uv.toml` 或 `pyproject.toml` 中启用 keyring。
+    可以使用 [`tool.uv.keyring-provider`](../../reference/settings/configuration.md#keyring-provider) 设置在您的 `uv.toml` 或 `pyproject.toml` 中启用 keyring。
 
     同样，索引的用户名可以直接添加到索引 URL 中。
 

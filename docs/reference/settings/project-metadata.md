@@ -186,7 +186,7 @@ environments = ["sys_platform == 'darwin'"]
 
 接受符合 [PEP 503](https://peps.python.org/pep-0503/)（简单仓库 API）的仓库，或按相同格式布局的本地目录。
 
-索引按定义顺序考虑，因此第一个定义的索引具有最高优先级。此外，此设置提供的索引比通过 [`index_url`](#index-url) 或 [`extra_index_url`](#extra-index-url) 指定的任何索引具有更高的优先级。除非指定了替代的[索引策略](#index-strategy)，否则 uv 只会考虑包含给定包的第一个索引。
+索引按定义顺序考虑，因此第一个定义的索引具有最高优先级。此外，此设置提供的索引比通过 [`index_url`](../../reference/settings/configuration.md#index-url) 或 [`extra_index_url`](../../reference/settings/configuration.md#extra-index-url) 指定的任何索引具有更高的优先级。除非指定了替代的[索引策略](../../reference/settings/configuration.md#index-strategy)，否则 uv 只会考虑包含给定包的第一个索引。
 
 如果索引标记为 `explicit = true`，它将专门用于通过 `[tool.uv.sources]` 明确选择它的依赖，如下所示：
 
@@ -319,7 +319,7 @@ required-environments = [
 
 `tool.uv.sources` 通过在开发期间合并的附加源来丰富依赖元数据。依赖源可以是 Git 仓库、URL、本地路径或替代注册表。
 
-更多信息请参见[依赖](../concepts/projects/dependencies.md)。
+更多信息请参见[依赖](../../concepts/projects/dependencies.md)。
 
 **默认值**: `{}`
 

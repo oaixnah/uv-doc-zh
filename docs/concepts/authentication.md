@@ -25,7 +25,7 @@ uv 允许从 Git 安装包，并支持以下方案来认证私有仓库。
 
 使用 GitHub 个人访问令牌时，用户名是任意的。GitHub 不允许您在此类 URL 中使用您的帐户名和密码，但其他主机可能允许。
 
-如果 URL 中没有凭据且需要认证，则会查询 [Git 凭据帮助程序](#git-credential-helpers)。
+如果 URL 中没有凭据且需要认证，则会查询 [Git 凭据帮助程序](#git_1)。
 
 !!! important
 
@@ -52,7 +52,7 @@ $ gh auth login
 !!! note
 
     当以交互方式使用 `gh auth login` 时，凭据帮助程序将自动配置。
-    但是当使用 `gh auth login --with-token` 时，如 uv [GitHub Actions 指南](../guides/integration/github.md#private-repos) 中所示，之后需要运行 [`gh auth setup-git`](https://cli.github.com/manual/gh_auth_setup-git) 命令来配置凭据帮助程序。
+    但是当使用 `gh auth login --with-token` 时，如 uv [GitHub Actions 指南](../guides/integration/github.md#_4) 中所示，之后需要运行 [`gh auth setup-git`](https://cli.github.com/manual/gh_auth_setup-git) 命令来配置凭据帮助程序。
 
 ## HTTP 认证
 

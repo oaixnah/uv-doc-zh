@@ -11,7 +11,7 @@ Python 项目通常以源码分发包（sdist）和二进制分发包（wheel）
 
 !!! important
 
-    当使用 `uv build` 时，uv 充当[构建前端](https://peps.python.org/pep-0517/#terminology-and-goals)，仅确定要使用的 Python 版本并调用构建后端。构建的细节，例如包含的文件和分发包文件名，由构建后端确定，如 [`[build-system]`](./config.md#build-systems) 中所定义。有关构建配置的信息可以在相应工具的文档中找到。
+    当使用 `uv build` 时，uv 充当[构建前端](https://peps.python.org/pep-0517/#terminology-and-goals)，仅确定要使用的 Python 版本并调用构建后端。构建的细节，例如包含的文件和分发包文件名，由构建后端确定，如 [`[build-system]`](./config.md#_6) 中所定义。有关构建配置的信息可以在相应工具的文档中找到。
 
 ## 使用 `uv build`
 

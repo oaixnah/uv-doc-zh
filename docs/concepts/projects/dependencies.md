@@ -37,9 +37,9 @@ version = "0.1.0"
 dependencies = ["httpx>=0.27.2"]
 ```
 
-可以使用 [`--dev`](#development-dependencies)、[`--group`](#dependency-groups) 或 [`--optional`](#optional-dependencies) 标志将依赖项添加到备用字段。
+可以使用 [`--dev`](#_17)、[`--group`](#_18) 或 [`--optional`](#_16) 标志将依赖项添加到备用字段。
 
-依赖项将包含一个约束，例如 `>=0.27.2`，用于包的最新兼容版本。可以使用 [`--bounds`](../../reference/settings.md#add-bounds) 调整绑定的类型，或者直接提供约束：
+依赖项将包含一个约束，例如 `>=0.27.2`，用于包的最新兼容版本。可以使用 [`--bounds`](../../reference/settings/configuration.md#add-bounds) 调整绑定的类型，或者直接提供约束：
 
 ```console
 $ uv add "httpx>=0.20"
@@ -92,7 +92,7 @@ $ uv remove httpx
 
 可以使用 `--dev`、`--group` 或 `--optional` 标志从特定表中删除依赖项。
 
-如果为已删除的依赖项定义了[源](#dependency-sources)，并且没有其他对该依赖项的引用，则该源也将被删除。
+如果为已删除的依赖项定义了[源](#_9)，并且没有其他对该依赖项的引用，则该源也将被删除。
 
 ## 更改依赖
 
@@ -110,7 +110,7 @@ $ uv add "httpx>0.1.0"
     $ uv add "httpx>0.1.0" --upgrade-package httpx
     ```
 
-    有关升级包的更多详细信息，请参阅[锁定文件](./sync.md#upgrading-locked-package-versions)文档。
+    有关升级包的更多详细信息，请参阅[锁定文件](./sync.md#_10)文档。
 
 请求不同的依赖源将更新 `tool.uv.sources` 表，例如，在开发期间使用本地路径中的 `httpx`：
 
@@ -148,7 +148,7 @@ $ uv add "numpy; python_version >= '3.11'"
 
 !!! tip
 
-    依赖源也可以[按平台更改](#platform-specific-sources)。
+    依赖源也可以[按平台更改](#_13)。
 
 ## 项目依赖
 
@@ -319,7 +319,7 @@ langchain = { git = "https://github.com/langchain-ai/langchain", subdirectory = 
 
 ### URL
 
-要添加 URL 源，请提供一个指向 wheel（以 `.whl` 结尾）或源分发（通常以 `.tar.gz` 或 `.zip` 结尾；有关所有支持的格式，请参阅[此处](../../concepts/resolution.md#source-distribution)）的 `https://` URL。
+要添加 URL 源，请提供一个指向 wheel（以 `.whl` 结尾）或源分发（通常以 `.tar.gz` 或 `.zip` 结尾；有关所有支持的格式，请参阅[此处](../../concepts/resolution.md#_18)）的 `https://` URL。
 
 例如：
 
@@ -389,7 +389,7 @@ $ uv add ~/projects/bar/
     bar = { path = "../projects/bar", editable = true }
     ```
 
-    同样，如果一个项目被标记为[非包](./config.md#build-systems)，但您希望将其作为包安装在环境中，请在源上设置 `package = true`：
+    同样，如果一个项目被标记为[非包](./config.md#_6)，但您希望将其作为包安装在环境中，请在源上设置 `package = true`：
 
     ```toml title="pyproject.toml"
     [project]
@@ -488,7 +488,7 @@ $ uv lock --no-sources
 
 作为库发布的项目通常会将某些功能设为可选，以减少默认依赖树。例如，Pandas 有一个 [`excel` extra](https://pandas.pydata.org/docs/getting_started/install.html#excel-files) 和一个 [`plot` extra](https://pandas.pydata.org/docs/getting_started/install.html#visualization)，以避免安装 Excel 解析器和 `matplotlib`，除非有人明确要求它们。Extras 使用 `package[<extra>]` 语法请求，例如 `pandas[plot, excel]`。
 
-可选依赖项在 `[project.optional-dependencies]` 中指定，这是一个 TOML 表，它将 extra 名称映射到其依赖项，遵循[依赖说明符](#dependency-specifiers-pep-508)语法。
+可选依赖项在 `[project.optional-dependencies]` 中指定，这是一个 TOML 表，它将 extra 名称映射到其依赖项，遵循[依赖说明符](#pep-508)语法。
 
 可选依赖项可以像普通依赖项一样在 `tool.uv.sources` 中有条目。
 
@@ -648,7 +648,7 @@ dev-dependencies = [
 
 ## 构建依赖
 
-如果项目结构为 [Python 包](./config.md#build-systems)，它可能会声明构建项目所需但运行项目不需要的依赖项。这些依赖项在 `[build-system]` 表的 `build-system.requires` 下指定，遵循 [PEP 518](https://peps.python.org/pep-0518/)。
+如果项目结构为 [Python 包](./config.md#_6)，它可能会声明构建项目所需但运行项目不需要的依赖项。这些依赖项在 `[build-system]` 表的 `build-system.requires` 下指定，遵循 [PEP 518](https://peps.python.org/pep-0518/)。
 
 例如，如果项目使用 `setuptools` 作为其构建后端，则应将 `setuptools` 声明为构建依赖项：
 

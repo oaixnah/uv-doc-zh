@@ -75,7 +75,7 @@ ModuleNotFoundError: No module named 'distutils'
 
 !!! important
 
-    `--use-pep517` 标志应与 `pip install` 调用一起包含，以确保相同的构建隔离行为。uv 始终默认使用[构建隔离](../../pip/compatibility.md#pep-517-build-isolation)。
+    `--use-pep517` 标志应与 `pip install` 调用一起包含，以确保相同的构建隔离行为。uv 始终默认使用[构建隔离](../../pip/compatibility.md#pep-517)。
 
     我们还建议在重现失败时包含 `--force-reinstall` 和 `--no-cache` 选项。
 
@@ -232,7 +232,7 @@ $ uv pip install chumpy --no-build-isolation-package chumpy
 
 ### 构建了旧版本的包
 
-如果在解析期间包构建失败，并且失败的版本比您要使用的版本旧，请尝试添加带有下限的[约束](../settings.md#constraint-dependencies) (例如 `numpy>=1.17`)。有时，由于算法限制，uv 解析器会尝试使用过旧的包来查找合适的版本，这可以通过使用下限来防止。
+如果在解析期间包构建失败，并且失败的版本比您要使用的版本旧，请尝试添加带有下限的[约束](../settings/project-metadata.md#constraint-dependencies) (例如 `numpy>=1.17`)。有时，由于算法限制，uv 解析器会尝试使用过旧的包来查找合适的版本，这可以通过使用下限来防止。
 
 例如，在 Python 3.10 上解析以下依赖项时，uv 会尝试构建旧版本的 `apache-beam`。
 
@@ -254,11 +254,11 @@ apache-beam<=2.49.0
 
 添加下限约束，例如 `apache-beam<=2.49.0,>2.30.0`，可以解决此构建失败，因为 uv 将避免使用旧版本的 `apache-beam`。
 
-也可以使用 `constraints.txt` 文件或 [`constraint-dependencies`](../settings.md#constraint-dependencies) 设置为间接依赖项定义约束。
+也可以使用 `constraints.txt` 文件或 [`constraint-dependencies`](../settings/project-metadata.md#constraint-dependencies) 设置为间接依赖项定义约束。
 
 ### 使用了旧版本的构建依赖项
 
-如果由于 `uv` 选择了不兼容或过时的构建时依赖项版本而导致包构建失败，您可以专门为构建依赖项强制执行约束。[`build-constraint-dependencies`](../settings.md#build-constraint-dependencies) 设置 (或类似的 `build-constraints.txt` 文件) 可用于确保 `uv` 为给定的构建需求选择合适的版本。
+如果由于 `uv` 选择了不兼容或过时的构建时依赖项版本而导致包构建失败，您可以专门为构建依赖项强制执行约束。[`build-constraint-dependencies`](../settings/project-metadata.md#build-constraint-dependencies) 设置 (或类似的 `build-constraints.txt` 文件) 可用于确保 `uv` 为给定的构建需求选择合适的版本。
 
 例如，[#5551](https://github.com/astral-sh/uv/issues/5551#issuecomment-2256055975) 中描述的问题可以通过指定一个排除 `setuptools` 版本 `72.0.0` 的构建约束来解决：
 
@@ -285,4 +285,4 @@ numpy<1.23; python_version < "3.10"
 
 ### 包仅在特定平台上可用
 
-如果由于构建仅在另一个平台上可用的包而导致锁定失败，您可以[手动提供依赖项元数据](../settings.md#dependency-metadata)以跳过构建。uv 无法验证此信息，因此在使用此覆盖时指定正确的元数据非常重要。
+如果由于构建仅在另一个平台上可用的包而导致锁定失败，您可以[手动提供依赖项元数据](../settings/configuration.md#dependency-metadata)以跳过构建。uv 无法验证此信息，因此在使用此覆盖时指定正确的元数据非常重要。

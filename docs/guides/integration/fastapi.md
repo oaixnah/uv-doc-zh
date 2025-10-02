@@ -38,7 +38,7 @@ project
 $ uv init --app
 ```
 
-这将创建一个[具有应用布局的项目](../../concepts/projects/init.md#applications)和一个 `pyproject.toml` 文件。
+这将创建一个[具有应用布局的项目](../../concepts/projects/init.md#_3)和一个 `pyproject.toml` 文件。
 
 然后，添加对 FastAPI 的依赖：
 

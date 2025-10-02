@@ -25,7 +25,7 @@ uv 缓存语义的具体细节因依赖项的性质而异：
 
 默认情况下，只有当目录根目录中的 `pyproject.toml`、`setup.py` 或 `setup.cfg` 文件发生更改，或者添加或删除了 `src` 目录时，uv 才会重新构建和重新安装本地目录依赖项（例如，可编辑安装）。这是一种启发式方法，在某些情况下，可能导致重新安装的次数少于预期。
 
-要将附加信息合并到给定包的缓存键中，您可以在 [`tool.uv.cache-keys`](https://docs.astral.sh/uv/reference/settings/#cache-keys) 下添加缓存键条目，该条目涵盖文件路径和 Git 提交哈希。设置 [`tool.uv.cache-keys`](https://docs.astral.sh/uv/reference/settings/#cache-keys) 将替换默认值，因此任何必要的文件（如 `pyproject.toml`）仍应包含在用户定义的缓存键中。
+要将附加信息合并到给定包的缓存键中，您可以在 [`tool.uv.cache-keys`](../reference/settings/configuration.md#cache-keys) 下添加缓存键条目，该条目涵盖文件路径和 Git 提交哈希。设置 [`tool.uv.cache-keys`](../reference/settings/configuration.md#cache-keys) 将替换默认值，因此任何必要的文件（如 `pyproject.toml`）仍应包含在用户定义的缓存键中。
 
 例如，如果一个项目在 `pyproject.toml` 中指定了依赖项，但使用 [`setuptools-scm`](https://pypi.org/project/setuptools-scm/) 来管理其版本，因此每当提交哈希或依赖项发生更改时都应重新构建，您可以将以下内容添加到项目的 `pyproject.toml` 中：
 
@@ -114,7 +114,7 @@ uv 提供了几种从缓存中删除条目的机制：
 uv 按以下顺序确定缓存目录：
 
 1.  如果请求了 `--no-cache`，则为临时缓存目录。
-2.  通过 `--cache-dir`、`UV_CACHE_DIR` 或 [`tool.uv.cache-dir`](../reference/settings.md#cache-dir) 指定的特定缓存目录。
+2.  通过 `--cache-dir`、`UV_CACHE_DIR` 或 [`tool.uv.cache-dir`](../reference/settings/configuration.md#cache-dir) 指定的特定缓存目录。
 3.  系统适当的缓存目录，例如，在 Unix 上为 `$XDG_CACHE_HOME/uv` 或 `$HOME/.cache/uv`，在 Windows 上为 `%LOCALAPPDATA%\uv\cache`。
 
 !!! note

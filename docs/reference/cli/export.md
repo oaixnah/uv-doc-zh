@@ -158,11 +158,11 @@ uv export [OPTIONS]
 
 ## Resolver options
 
-### [`-U, --upgrade`](#-U-upgrade)
+### [`-U, --upgrade`](#-u-upgrade)
 
 允许包升级，忽略任何现有输出文件中的固定版本。暗示 `--refresh`
 
-### [`-P, --upgrade-package`](#-P-upgrade-package)
+### [`-P, --upgrade-package`](#-p-upgrade-package)
 
 允许特定包的升级，忽略任何现有输出文件中的固定版本。暗示 `--refresh-package`
 
@@ -188,7 +188,7 @@ uv export [OPTIONS]
 
 ## Build options
 
-### [`-C, --config-setting`](#-C-config-setting)
+### [`-C, --config-setting`](#-c-config-setting)
 
 传递给 PEP 517 构建后端的设置，指定为 `KEY=VALUE` 对
 

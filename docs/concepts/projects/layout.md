@@ -23,10 +23,10 @@ version = "0.1.0"
 
 其他项目元数据和配置包括：
 
-- [Python 版本要求](./config.md#python-version-requirement)
+- [Python 版本要求](./config.md#python)
 - [依赖项](./dependencies.md)
-- [构建系统](./config.md#build-systems)
-- [入口点（命令）](./config.md#entry-points)
+- [构建系统](./config.md#_6)
+- [入口点（命令）](./config.md#_5)
 
 ## 项目环境
 
@@ -36,11 +36,11 @@ version = "0.1.0"
 
 当调用 `uv run` 时，如果项目环境不存在，它将创建该环境，如果存在，则确保其为最新状态。也可以使用 `uv sync` 显式创建项目环境。有关详细信息，请参阅[锁定和同步](./sync.md)文档。
 
-_不_ 建议手动修改项目环境，例如使用 `uv pip install`。对于项目依赖项，请使用 `uv add` 将包添加到环境中。对于一次性需求，请使用 [`uvx`](../../guides/tools.md) 或 [`uv run --with`](./run.md#requesting-additional-dependencies)。
+_不_ 建议手动修改项目环境，例如使用 `uv pip install`。对于项目依赖项，请使用 `uv add` 将包添加到环境中。对于一次性需求，请使用 [`uvx`](../../guides/tools.md) 或 [`uv run --with`](./run.md#_2)。
 
 !!! tip
 
-    如果您不希望 uv 管理项目环境，请设置 [`managed = false`](../../reference/settings.md#managed) 以禁用项目的自动锁定和同步。例如：
+    如果您不希望 uv 管理项目环境，请设置 [`managed = false`](../../reference/settings/project-metadata.md#managed) 以禁用项目的自动锁定和同步。例如：
 
     ```toml title="pyproject.toml"
     [tool.uv]

@@ -38,7 +38,7 @@ example-app
 
     在 v0.6.0 之前，uv 创建一个名为 `hello.py` 的文件而不是 `main.py`。
 
-`pyproject.toml` 包括基本元数据。它不包括构建系统，它不是一个[包](./config.md#project-packaging)，也不会被安装到环境中：
+`pyproject.toml` 包括基本元数据。它不包括构建系统，它不是一个[包](./config.md#_8)，也不会被安装到环境中：
 
 ```toml title="pyproject.toml"
 [project]
@@ -115,7 +115,7 @@ build-backend = "hatchling.build"
 
     可以使用 `--build-backend` 选项来请求替代的构建系统。
 
-包含一个[命令](./config.md#entry-points)定义：
+包含一个[命令](./config.md#_5)定义：
 
 ```toml title="pyproject.toml" hl_lines="9 10"
 [project]

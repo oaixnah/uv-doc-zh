@@ -40,7 +40,7 @@ $ uv run --with httpx==0.25.0 python -c "import httpx; print(httpx.__version__)"
 
 ## 运行脚本
 
-声明了内联元数据的脚本会自动在与项目隔离的环境中执行。有关更多详细信息，请参阅[脚本指南](../../guides/scripts.md#declaring-script-dependencies)。
+声明了内联元数据的脚本会自动在与项目隔离的环境中执行。有关更多详细信息，请参阅[脚本指南](../../guides/scripts.md#_4)。
 
 例如，给定一个脚本：
 

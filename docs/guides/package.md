@@ -12,7 +12,7 @@ uv 支持通过 `uv build` 将 Python 包构建为源码和二进制发行版，
 
 在尝试发布你的项目之前，你需要确保它已经准备好进行分发打包。
 
-如果你的项目在 `pyproject.toml` 中不包含 `[build-system]` 定义，uv 默认不会构建它。这意味着你的项目可能还没有准备好进行分发。在[项目概念](../concepts/projects/config.md#build-systems)文档中阅读有关声明构建系统的影响的更多信息。
+如果你的项目在 `pyproject.toml` 中不包含 `[build-system]` 定义，uv 默认不会构建它。这意味着你的项目可能还没有准备好进行分发。在[项目概念](../concepts/projects/config.md#_6)文档中阅读有关声明构建系统的影响的更多信息。
 
 !!! note
 

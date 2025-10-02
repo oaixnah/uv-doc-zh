@@ -40,15 +40,15 @@ uv 将确保 Python 3.11.6 可用——必要时会下载并安装它——然�
 - `<executable-name>` (例如, `mypython3`)
 - `<install-dir>` (例如, `/some/environment/`)
 
-默认情况下，如果在系统上找不到 Python 版本，uv 将自动下载。此行为可以通过 [`python-downloads` 选项](./python-versions.md#disabling-automatic-python-downloads)禁用。
+默认情况下，如果在系统上找不到 Python 版本，uv 将自动下载。此行为可以通过 [禁用 `python-downloads` 选项](./python-versions.md#python_10)禁用。
 
 ### Python 版本文件
 
 `.python-version` 文件可用于创建默认的 Python 版本请求。uv 在工作目录及其每个父目录中搜索 `.python-version` 文件。如果未找到，uv 将检查用户级配置目录。可以使用上述任何请求格式，但建议使用版本号以便与其他工具互操作。
 
-可以使用 [`uv python pin`](../reference/cli.md/#uv-python-pin) 命令在当前目录中创建 `.python-version` 文件。
+可以使用 [`uv python pin`](../reference/cli/python.md#pin) 命令在当前目录中创建 `.python-version` 文件。
 
-可以使用 [`uv python pin --global`](../reference/cli.md/#uv-python-pin) 命令在用户配置目录中创建全局 `.python-version` 文件。
+可以使用 [`uv python pin --global`](../reference/cli/python.md#pin) 命令在用户配置目录中创建全局 `.python-version` 文件。
 
 可以使用 `--no-config` 禁用对 `.python-version` 文件的发现。
 
@@ -231,7 +231,7 @@ $ uv python list --all-platforms
 $ uv python list --only-installed
 ```
 
-有关更多详细信息，请参阅 [`uv python list`](../reference/cli.md#uv-python-list) 参考。
+有关更多详细信息，请参阅 [`uv python list`](../reference/cli/python.md#list) 参考。
 
 ## 查找 Python 可执行文件
 
@@ -241,7 +241,7 @@ $ uv python list --only-installed
 $ uv python find
 ```
 
-默认情况下，这将显示第一个可用 Python 可执行文件的路径。有关如何发现可执行文件的详细信息，请参阅[发现规则](./python-versions.md#_8)。
+默认情况下，这将显示第一个可用 Python 可执行文件的路径。有关如何发现可执行文件的详细信息，请参阅[发现规则](./python-versions.md#python_6)。
 
 此接口还支持许多[请求格式](./python-versions.md#_1)，例如查找版本为 3.11 或更新的 Python 可执行文件：
 
@@ -265,7 +265,7 @@ $ uv python find --system
 - `PATH` 上的 Python 解释器，在 macOS 和 Linux 上为 `python`、`python3` 或 `python3.x`，在 Windows 上为 `python.exe`。
 - 在 Windows 上，Windows 注册表中的 Python 解释器和 Microsoft Store Python 解释器（请参阅 `py --list-paths`）与请求的版本匹配。
 
-在某些情况下，uv 允许使用来自虚拟环境的 Python 版本。在这种情况下，将在搜索上述安装之前检查虚拟环境的解释器是否与请求兼容。有关详细信息，请参阅 [pip 兼容的虚拟环境发现](../pip/environments.md#discovery-of-python-environments)文档。
+在某些情况下，uv 允许使用来自虚拟环境的 Python 版本。在这种情况下，将在搜索上述安装之前检查虚拟环境的解释器是否与请求兼容。有关详细信息，请参阅 [pip 兼容的虚拟环境发现](../pip/environments.md#python_2)文档。
 
 执行发现时，将忽略非可执行文件。查询每个发现的可执行文件的元数据，以确保其满足[请求的 Python 版本](./python-versions.md#_1)。如果查询失败，将跳过该可执行文件。如果可执行文件满足请求，则使用它而不检查其他可执行文件。
 
@@ -283,7 +283,7 @@ $ uv python find --system
 
 默认情况下，uv 会在需要时自动下载 Python 版本。
 
-可以使用 [`python-downloads`](../reference/settings.md#python-downloads) 选项禁用此行为。默认情况下，它设置为 `automatic`；设置为 `manual` 以仅在 `uv python install` 期间允许 Python 下载。
+可以使用 [`python-downloads`](../reference/settings/configuration.md#python-downloads) 选项禁用此行为。默认情况下，它设置为 `automatic`；设置为 `manual` 以仅在 `uv python install` 期间允许 Python 下载。
 
 !!! tip "提示"
 
@@ -303,11 +303,11 @@ $ uv python list --managed-python
 $ uv python list --no-managed-python
 ```
 
-要在配置文件中更改 uv 的默认行为，请使用 [`python-preference` 设置](./python-versions.md#adjusting-python-version-preferences)。
+要在配置文件中更改 uv 的默认行为，请使用 [`python-preference` 设置](./python-versions.md#python_11)。
 
 ## 调整 Python 版本偏好
 
-[`python-preference`](../reference/settings.md#python-preference) 设置决定是偏好使用系统上已有的 Python 安装，还是由 uv 下载和安装的 Python 安装。
+[`python-preference`](../reference/settings/configuration.md#python-preference) 设置决定是偏好使用系统上已有的 Python 安装，还是由 uv 下载和安装的 Python 安装。
 
 默认情况下，`python-preference` 设置为 `managed`，它偏好 uv 管理的 Python 安装而不是系统 Python 安装。但是，系统 Python 安装仍然优先于下载 uv 管理的 Python 版本。
 

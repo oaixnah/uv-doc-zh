@@ -251,7 +251,7 @@ URL。
 
 指定用于项目虚拟环境的目录路径。
 
-有关更多详细信息，请参阅[项目文档](../concepts/projects/config.md#project-environment-path)。
+有关更多详细信息，请参阅[项目文档](../concepts/projects/config.md#_9)。
 
 ### [`UV_PUBLISH_CHECK_URL`](#uv_publish_check_url)
 
@@ -299,7 +299,7 @@ URL。
 
 ### [`UV_PYTHON_DOWNLOADS`](#uv_python_downloads)
 
-等同于 [`python-downloads`](../reference/settings.md#python-downloads) 设置，以及在禁用时，`--no-python-downloads` 选项。uv
+等同于 [`python-downloads`](../reference/settings/configuration.md#python-downloads) 设置，以及在禁用时，`--no-python-downloads` 选项。uv
 是否应允许 Python 下载。
 
 ### [`UV_PYTHON_DOWNLOADS_JSON_URL`](#uv_python_downloads_json_url)

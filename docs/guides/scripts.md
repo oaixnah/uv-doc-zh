@@ -11,7 +11,7 @@ Python 脚本是旨在独立执行的文件，例如，通过 `python <script>.p
 
 !!! note
 
-    如果您不熟悉 Python 环境：每个 Python 安装都有一个可以安装包的环境。通常，建议创建[_虚拟_ 环境](https://docs.python.org/3/library/venv.html)来隔离每个脚本所需的包。uv 会自动为您管理虚拟环境，并倾向于使用[声明式](#declaring-script-dependencies)方法来处理依赖项。
+    如果您不熟悉 Python 环境：每个 Python 安装都有一个可以安装包的环境。通常，建议创建[_虚拟_ 环境](https://docs.python.org/3/library/venv.html)来隔离每个脚本所需的包。uv 会自动为您管理虚拟环境，并倾向于使用[声明式](#_2)方法来处理依赖项。
 
 ## 运行无依赖的脚本
 
@@ -82,7 +82,7 @@ $ uv run --no-project example.py
 
 ## 运行带依赖的脚本
 
-当您的脚本需要其他包时，必须将它们安装到脚本运行的环境中。uv 倾向于按需创建这些环境，而不是使用手动管理依赖项的长期虚拟环境。这需要显式声明脚本所需的依赖项。通常，建议使用[项目](./projects.md)或[内联元数据](#declaring-script-dependencies)来声明依赖项，但 uv 也支持按次调用请求依赖项。
+当您的脚本需要其他包时，必须将它们安装到脚本运行的环境中。uv 倾向于按需创建这些环境，而不是使用手动管理依赖项的长期虚拟环境。这需要显式声明脚本所需的依赖项。通常，建议使用[项目](./projects.md)或[内联元数据](#_2)来声明依赖项，但 uv 也支持按次调用请求依赖项。
 
 例如，以下脚本需要 `rich`。
 
@@ -327,7 +327,7 @@ root.mainloop()
 PS> uv run example.pyw
 ```
 
-![运行结果](../../assets/uv_gui_script_hello_world.png){: style="height:50px;width:150px"}
+![运行结果](../assets/uv_gui_script_hello_world.png){: style="height:50px;width:150px"}
 
 同样，它也适用于依赖项：
 
@@ -354,10 +354,10 @@ sys.exit(app.exec_())
 PS> uv run --with PyQt5 example_pyqt.pyw
 ```
 
-![运行结果](../../assets/uv_gui_script_hello_world_pyqt.png){: style="height:50px;width:150px"}
+![运行结果](../assets/uv_gui_script_hello_world_pyqt.png){: style="height:50px;width:150px"}
 
 ## 后续步骤
 
-要了解有关 `uv run` 的更多信息，请参阅[命令参考](../reference/cli.md#uv-run)。
+要了解有关 `uv run` 的更多信息，请参阅[命令参考](../reference/cli/index.md)。
 
 或者，继续阅读以了解如何使用 uv [运行和安装工具](./tools.md)。

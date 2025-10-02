@@ -80,7 +80,7 @@ dependencies = []
 
     有关 `pyproject.toml` 格式的更多入门细节，请参阅官方 [`pyproject.toml` 指南](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/)。
 
-你还将使用此文件在 [`[tool.uv]`](../reference/settings.md) 部分中指定 uv [配置选项](../concepts/configuration-files.md)。
+你还将使用此文件在 [`[tool.uv]`](../reference/settings/index.md) 部分中指定 uv [配置选项](../concepts/configuration-files.md)。
 
 ### `.python-version`
 
@@ -210,6 +210,6 @@ hello-world-0.1.0.tar.gz
 
 ## 后续步骤
 
-要了解有关使用 uv 处理项目的更多信息，请参阅[项目概念](../concepts/projects/index.md)页面和[命令参考](../reference/cli.md#uv)。
+要了解有关使用 uv 处理项目的更多信息，请参阅[项目概念](../concepts/projects/index.md)页面和[命令参考](../reference/cli/index.md)。
 
 或者，继续阅读以了解如何[构建项目并将其发布到包索引](./package.md)。

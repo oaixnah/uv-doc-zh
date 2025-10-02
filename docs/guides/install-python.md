@@ -27,7 +27,7 @@ $ uv python install
     当 uv 安装 Python 后，它不会在全局范围内可用（即通过 `python` 命令）。
     此功能的支持尚处于_预览_阶段。详情请参阅[安装 Python 可执行文件](../concepts/python-versions.md#python_3)。
 
-    你仍然可以使用[`uv run`](../guides/scripts.md#using-different-python-versions) 或 [创建并激活虚拟环境](../pip/environments.md)来直接使用 `python`。
+    你仍然可以使用[`uv run`](../guides/scripts.md#python_1) 或 [创建并激活虚拟环境](../pip/environments.md)来直接使用 `python`。
 
 ## 安装特定版本
 
@@ -97,7 +97,7 @@ Note that when an automatic Python installation occurs, the `python` command wil
 
 如果你的系统上存在 Python 安装，uv 将会使用它们。此行为无需配置：如果系统 Python 满足命令调用的要求，uv 将使用它。详情请参阅 [Python 发现](../concepts/python-versions.md#python_8)文档。
 
-要强制 uv 使用系统 Python，请提供 `--no-managed-python` 标志。更多详情请参阅 [Python 版本偏好](../concepts/python-versions.md#ruv-python)文档。
+要强制 uv 使用系统 Python，请提供 `--no-managed-python` 标志。更多详情请参阅 [Python 版本偏好](../concepts/python-versions.md#python_11)文档。
 
 ## 升级 Python 版本
 
@@ -121,6 +121,6 @@ $ uv python upgrade
 
 ## 后续步骤
 
-要了解有关 `uv python` 的更多信息，请参阅 [Python 版本](../concepts/python-versions.md)页面和[命令参考](../reference/cli.md#uv-python)。
+要了解有关 `uv python` 的更多信息，请参阅 [Python 版本](../concepts/python-versions.md)页面和[命令参考](../reference/cli/python.md)。
 
 或者，继续阅读以了解如何[运行脚本](./scripts.md)和使用 uv 调用 Python。

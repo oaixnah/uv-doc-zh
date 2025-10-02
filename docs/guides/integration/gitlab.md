@@ -7,7 +7,7 @@ description: 一份在 GitLab CI/CD 中使用 uv 的指南，内容包括安装�
 
 ## 使用 uv 镜像
 
-Astral 提供了预装 uv 的 [Docker 镜像](docker.md#available-images)。
+Astral 提供了预装 uv 的 [Docker 镜像](docker.md#_2)。
 请选择适合您工作流程的变体。
 
 ```yaml title="gitlab-ci.yml"
@@ -57,7 +57,7 @@ uv-install:
 
 有关配置缓存的更多详细信息，请参阅 [GitLab 缓存文档](https://docs.gitlab.com/ee/ci/caching/)。
 
-建议在作业结束时使用 `uv cache prune --ci` 来减小缓存大小。有关更多详细信息，请参阅 [uv 缓存文档](../../concepts/cache.md#caching-in-continuous-integration)。
+建议在作业结束时使用 `uv cache prune --ci` 来减小缓存大小。有关更多详细信息，请参阅 [uv 缓存文档](../../concepts/cache.md#_5)。
 
 ## 使用 `uv pip`
 

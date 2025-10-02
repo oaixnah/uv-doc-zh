@@ -12,7 +12,7 @@ description:
 
     请查看 [`uv-docker-example`](https://github.com/astral-sh/uv-docker-example) 项目，了解在 Docker 中使用 uv 构建应用程序的最佳实践示例。
 
-uv 提供了 _distroless_ Docker 镜像和从流行基础镜像派生的镜像。前者可用于将 [uv 二进制文件](#安装-uv) 复制到你自己的镜像构建中，后者则适用于在容器中使用 uv。distroless 镜像除了 uv 二进制文件外不包含任何其他内容。相比之下，派生镜像则包含了预装 uv 的操作系统。
+uv 提供了 _distroless_ Docker 镜像和从流行基础镜像派生的镜像。前者可用于将 [uv 二进制文件](#uv) 复制到你自己的镜像构建中，后者则适用于在容器中使用 uv。distroless 镜像除了 uv 二进制文件外不包含任何其他内容。相比之下，派生镜像则包含了预装 uv 的操作系统。
 
 例如，使用基于 Debian 的镜像在容器中运行 uv：
 
@@ -146,7 +146,7 @@ CMD ["uv", "run", "my_app"]
 
 !!! tip
 
-    最佳实践是使用[中间层](#中间层)来分离依赖项和项目本身的安装，以改善 Docker 镜像的构建时间。
+    最佳实践是使用[中间层](#_10)来分离依赖项和项目本身的安装，以改善 Docker 镜像的构建时间。
 
 请参阅 [`uv-docker-example` 项目](https://github.com/astral-sh/uv-docker-example/blob/main/Dockerfile)中的完整示例。
 
@@ -166,11 +166,11 @@ RUN uv run some_script.py
 
 !!! tip
 
-    或者，可以在同步之前设置 [`UV_PROJECT_ENVIRONMENT` 设置](../../concepts/projects/config.md#project-environment-path)，以安装到系统 Python 环境并完全跳过环境激活。
+    或者，可以在同步之前设置 [`UV_PROJECT_ENVIRONMENT` 设置](../../concepts/projects/config.md#_9)，以安装到系统 Python 环境并完全跳过环境激活。
 
 ### 使用已安装的工具
 
-要使用已安装的工具，请确保[工具 bin 目录](../../concepts/tools.md#the-bin-directory)在路径上：
+要使用已安装的工具，请确保[工具 bin 目录](../../concepts/tools.md#bin)在路径上：
 
 ```dockerfile title="Dockerfile"
 ENV PATH=/root/.local/bin:$PATH
@@ -294,7 +294,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync
 ```
 
-更改默认的 [`UV_LINK_MODE`](../../reference/settings.md#link-mode) 可以消除关于无法使用硬链接的警告，因为缓存和同步目标位于不同的文件系统上。
+更改默认的 [`UV_LINK_MODE`](../../reference/settings/configuration.md#link-mode) 可以消除关于无法使用硬链接的警告，因为缓存和同步目标位于不同的文件系统上。
 
 如果你不挂载缓存，可以通过使用 `--no-cache` 标志或设置 `UV_NO_CACHE` 来减小镜像大小。
 

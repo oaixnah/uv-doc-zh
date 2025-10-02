@@ -112,4 +112,4 @@ uv 本身不依赖于 Python，但它确实需要定位一个 Python 环境来 (
 
 如果没有找到虚拟环境，uv 将提示用户通过 `uv venv` 在当前目录中创建一个。
 
-如果包含 `--system` 标志，uv 将跳过虚拟环境搜索已安装的 Python 版本。同样，当运行一个不会改变环境的命令时，比如 `uv pip compile`，uv *不要求*虚拟环境——但是，仍然需要一个 Python 解释器。有关已安装 Python 版本发现的详细信息，请参阅 [Python 发现](../concepts/python-versions.md#_8)的文档。
+如果包含 `--system` 标志，uv 将跳过虚拟环境搜索已安装的 Python 版本。同样，当运行一个不会改变环境的命令时，比如 `uv pip compile`，uv *不要求*虚拟环境——但是，仍然需要一个 Python 解释器。有关已安装 Python 版本发现的详细信息，请参阅 [Python 发现](../concepts/python-versions.md#python_8)的文档。

@@ -49,7 +49,7 @@ $ uvx pycowsay hello from uv
 
 !!! note
 
-    如果您在[项目](../concepts/projects/index.md)中运行工具，并且该工具要求安装您的项目（例如，使用 `pytest` 或 `mypy` 时），您应该使用 [`uv run`](./projects.md#running-commands) 而不是 `uvx`。否则，该工具将在与您的项目隔离的虚拟环境中运行。
+    如果您在[项目](../concepts/projects/index.md)中运行工具，并且该工具要求安装您的项目（例如，使用 `pytest` 或 `mypy` 时），您应该使用 [`uv run`](../reference/cli/run.md) 而不是 `uvx`。否则，该工具将在与您的项目隔离的虚拟环境中运行。
 
     如果您的项目结构是扁平的，例如，没有使用 `src` 目录来存放模块，那么项目本身就不需要安装，使用 `uvx` 就可以了。在这种情况下，只有当您想在项目的依赖项中固定工具的版本时，使用 `uv run` 才是有益的。
 
@@ -241,7 +241,7 @@ $ uv tool install --python 3.10 ruff
 $ uv tool upgrade --python 3.10 ruff
 ```
 
-有关请求 Python 版本的更多详细信息，请参阅[Python 版本](../concepts/python-versions.md#requesting-a-version)概念页面。
+有关请求 Python 版本的更多详细信息，请参阅[Python 版本](../concepts/python-versions.md#_1)概念页面。
 
 ## 旧版 Windows 脚本
 
@@ -263,6 +263,6 @@ $ uv tool run --from nuitka==2.6.7 nuitka --version
 
 ## 后续步骤
 
-要了解有关使用 uv 管理工具的更多信息，请参阅[工具概念](../concepts/tools.md)页面和[命令参考](../reference/cli.md#uv-tool)。
+要了解有关使用 uv 管理工具的更多信息，请参阅[工具概念](../concepts/tools.md)页面和[命令参考](../reference/cli/index.md)。
 
 或者，继续阅读以了解如何[处理项目](./projects.md)。
