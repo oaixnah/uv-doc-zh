@@ -1,5 +1,6 @@
 ---
 subtitle: Locking environments
+description: 一份关于 uv 锁定环境的指南，包括锁定依赖项、复现环境等。
 ---
 
 # 锁定环境

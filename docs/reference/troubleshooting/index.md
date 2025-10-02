@@ -1,5 +1,6 @@
 ---
 subtitle: Troubleshooting
+description: 了解 uv 项目的故障排查。
 ---
 
 # 排除故障

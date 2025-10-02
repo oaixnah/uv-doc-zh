@@ -1,5 +1,6 @@
 ---
 title: uv init
+description: 创建一个新项目。
 ---
 
 # uv init

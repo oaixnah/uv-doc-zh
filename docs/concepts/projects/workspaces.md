@@ -1,5 +1,6 @@
 ---
 subtitle: Using workspaces
+description: 学习如何使用uv创建和管理Python项目的工作区，包括定义工作区成员、排除目录、锁定和同步依赖项。完整指南帮助您高效地组织和发布Python代码。
 ---
 
 # 使用工作区

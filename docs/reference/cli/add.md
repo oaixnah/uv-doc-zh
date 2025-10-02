@@ -1,5 +1,6 @@
 ---
 title: uv add
+description: 向项目添加依赖项。
 ---
 
 # uv add

@@ -1,5 +1,6 @@
 ---
 subtitle: Build failures
+description: 了解 uv 项目的构建失败故障排查。
 ---
 
 # 构建失败故障排查

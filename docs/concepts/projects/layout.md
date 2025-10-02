@@ -1,6 +1,7 @@
 ---
 title: 项目结构和文件
 subtitle: Structure and files
+description: 学习Python项目的结构和文件布局，包括`pyproject.toml`、`uv.lock`、`uv.toml`和`.venv`目录。了解如何组织项目代码、管理依赖项、配置项目和构建分发版。完整指南帮助您高效地组织和发布Python代码。
 ---
 
 # 结构和文件

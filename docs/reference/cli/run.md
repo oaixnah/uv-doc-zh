@@ -1,5 +1,6 @@
 ---
 title: uv run
+description: 运行命令或脚本。
 ---
 
 # uv run

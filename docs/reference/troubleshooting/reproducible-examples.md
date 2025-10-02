@@ -1,5 +1,6 @@
 ---
 subtitle: Reproducible examples
+description: 了解 uv 项目的可复现例子。
 ---
 
 # 可复现的例子

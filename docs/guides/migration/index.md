@@ -1,5 +1,6 @@
 ---
 subtitle: Migration
+description: 学习如何从其他工具迁移到 uv，包括从 pip 迁移到 uv 项目。
 ---
 
 # 迁移

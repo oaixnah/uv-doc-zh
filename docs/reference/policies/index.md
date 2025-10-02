@@ -1,5 +1,6 @@
 ---
 subtitle: Policies
+description: 了解 uv 项目的政策。
 ---
 
 # 政策

@@ -1,5 +1,6 @@
 ---
 title: uv sync
+description: 更新项目的环境。
 ---
 
 # uv sync

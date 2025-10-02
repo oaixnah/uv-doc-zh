@@ -1,5 +1,6 @@
 ---
 title: uv publish
+description: 将分发包上传到索引。
 ---
 
 # uv publish

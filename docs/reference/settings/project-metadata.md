@@ -1,5 +1,6 @@
 ---
 subtitle: Project metadata
+description: 了解 uv 项目的项目元数据选项。
 ---
 
 # 项目元数据

@@ -1,6 +1,7 @@
 ---
 title: 构建项目发行版
 subtitle: Building distributions
+description: 学习如何使用uv build命令构建Python项目的源码分发包(sdist)和二进制分发包(wheel)，包括构建约束配置和可复现性设置，完整指南帮助您将项目发布到PyPI等索引。
 ---
 
 # 构建分发版

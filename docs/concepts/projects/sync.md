@@ -1,5 +1,6 @@
 ---
 subtitle: Locking and syncing
+description: 学习如何使用uv锁定和同步Python项目的依赖项，包括自动锁定与同步、检查锁文件是否是最新、创建锁文件和升级锁定的包版本。完整指南帮助您确保项目环境始终是最新的。
 ---
 
 # 锁定与同步

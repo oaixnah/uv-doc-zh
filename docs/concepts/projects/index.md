@@ -1,5 +1,6 @@
 ---
 subtitle: Projects
+description: 学习如何使用uv创建和管理Python项目，包括项目结构、依赖项管理、运行脚本、同步环境、配置项目和构建分发版。完整指南帮助您高效地组织和发布Python代码。
 ---
 
 # 项目

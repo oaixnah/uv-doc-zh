@@ -1,5 +1,6 @@
 ---
 subtitle: Concepts
+description: 学习uv的核心概念，包括项目、工具、Python 版本、配置文件、包索引、解析、uv 构建后端。完整指南帮助您了解uv的功能和工作原理。
 ---
 
 # 概念

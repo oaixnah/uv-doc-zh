@@ -1,5 +1,6 @@
 ---
 subtitle: From pip to a uv project
+description: 本指南将讨论如何从以 `requirements` 文件为中心的 `pip` 和 `pip-tools` 工作流转换为使用 `pyproject.toml` 和 `uv.lock` 文件的 uv 项目工作流。
 ---
 
 # 从 pip 迁移到 uv 项目

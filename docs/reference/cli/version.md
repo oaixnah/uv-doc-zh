@@ -1,5 +1,6 @@
 ---
 title: uv version
+description: 读取或更新项目的版本。
 ---
 
 # uv version

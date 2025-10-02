@@ -1,5 +1,6 @@
 ---
 subtitle: Installation
+description: 学习安装uv的方法，包括使用独立安装程序或包管理器。了解如何检查安装是否成功，以及如何在不同操作系统上安装uv。完整指南帮助您快速上手uv。
 ---
 
 # 安装 uv

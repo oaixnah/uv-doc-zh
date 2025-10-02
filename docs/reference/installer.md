@@ -1,5 +1,6 @@
 ---
 subtitle: Installer
+description: 了解 uv 项目的安装程序。
 ---
 
 # 安装程序

@@ -1,5 +1,6 @@
 ---
 subtitle: Getting started
+description: 学习安装uv后，执行基本操作的步骤。包括检查uv是否可用、运行脚本、创建和处理项目、运行工具和使用pip接口。完整指南帮助您快速上手uv。
 ---
 
 # 入门

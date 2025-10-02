@@ -1,7 +1,6 @@
 ---
 title: 在 FastAPI 中使用 uv
-description:
-  一份关于在 FastAPI 中使用 uv 管理 Python 依赖、运行应用和使用 Docker 部署的指南。
+description: 一份关于在 FastAPI 中使用 uv 管理 Python 依赖、运行应用和使用 Docker 部署的指南。
 ---
 
 # 在 FastAPI 中使用 uv

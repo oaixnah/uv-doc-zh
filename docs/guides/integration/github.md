@@ -1,7 +1,6 @@
 ---
 title: 在 GitHub Actions 中使用 uv
-description:
-  在 GitHub Actions 中使用 uv 的指南，包括安装、设置 Python、安装依赖项等。
+description: 在 GitHub Actions 中使用 uv 的指南，包括安装、设置 Python、安装依赖项等。
 ---
 
 # 在 GitHub Actions 中使用 uv

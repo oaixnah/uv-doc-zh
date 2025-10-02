@@ -1,8 +1,7 @@
 ---
 title: 使用工具
 subtitle: Using tools
-description:
-  一份关于使用 uv 运行作为 Python 包发布的工具的指南，包括使用 uvx 进行一次性调用、请求特定工具版本、安装工具、升级工具等。
+description: 一份关于使用 uv 运行作为 Python 包发布的工具的指南，包括使用 uvx 进行一次性调用、请求特定工具版本、安装工具、升级工具等。
 ---
 
 # 使用工具

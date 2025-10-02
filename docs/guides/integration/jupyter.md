@@ -1,7 +1,6 @@
 ---
 title: 将 uv 与 Jupyter 结合使用
-description:
-  一份将 uv 与 Jupyter notebook 结合使用的完整指南，用于交互式计算、数据分析和可视化，包括内核管理和虚拟环境集成。
+description: 一份将 uv 与 Jupyter notebook 结合使用的完整指南，用于交互式计算、数据分析和可视化，包括内核管理和虚拟环境集成。
 ---
 
 # 将 uv 与 Jupyter 结合使用

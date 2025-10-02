@@ -1,5 +1,6 @@
 ---
 subtitle: Declaring dependencies
+description: 一份关于 uv 声明依赖项的指南，包括使用 `pyproject.toml` 和 `requirements.in` 文件声明依赖项。
 ---
 
 # 声明依赖项

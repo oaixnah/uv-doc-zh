@@ -1,5 +1,6 @@
 ---
 subtitle: Python versions
+description: 学习uv支持的Python版本，包括uv管理的Python和系统Python。了解如何请求特定的Python版本，以及uv如何处理不同的Python实现。完整指南帮助您了解uv的Python版本支持。
 ---
 
 # Python 版本

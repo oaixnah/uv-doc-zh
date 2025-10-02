@@ -1,5 +1,6 @@
 ---
 subtitle: Compatibility with pip
+description: 一份关于 uv 与 `pip` 和 `pip-tools` 之间兼容性的指南，包括已知差异、解决方法和未来的兼容性意图声明。
 ---
 
 # 与 `pip` 和 `pip-tools` 的兼容性

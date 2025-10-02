@@ -1,5 +1,6 @@
 ---
 title: uv remove
+description: 从项目中移除依赖项。
 ---
 
 # uv remove

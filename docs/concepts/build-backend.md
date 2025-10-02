@@ -1,5 +1,6 @@
 ---
 subtitle: Build backend
+description: 学习如何使用uv作为Python项目的构建后端，包括默认构建后端、构建后端的作用、uv 构建后端的优势和配置选项。完整指南帮助您选择和使用 uv 构建后端。
 ---
 
 # 构建后端

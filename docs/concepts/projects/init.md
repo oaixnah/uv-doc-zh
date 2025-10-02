@@ -1,6 +1,7 @@
 ---
 title: 创建项目
 subtitle: Creating projects
+description: 学习如何使用uv创建Python项目，包括应用程序和库项目。了解项目结构、依赖项管理、运行脚本、同步环境、配置项目和构建分发版。完整指南帮助您高效地组织和发布Python代码。
 ---
 
 # 创建项目

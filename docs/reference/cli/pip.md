@@ -1,5 +1,6 @@
 ---
 title: uv pip
+description: 使用与 pip 兼容的接口管理 Python 包
 ---
 
 # uv pip

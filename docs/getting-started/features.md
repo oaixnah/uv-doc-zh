@@ -1,5 +1,6 @@
 ---
 subtitle: Features
+description: 学习uv的基本功能，包括安装和管理 Python 版本、运行脚本、创建和处理项目、运行工具和使用 pip 接口。完整指南帮助您了解uv的功能和工作原理。
 ---
 
 # 功能概述

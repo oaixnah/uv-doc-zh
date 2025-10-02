@@ -1,5 +1,6 @@
 ---
 subtitle: Package indexes
+description: 学习uv支持的包索引，包括默认索引和自定义索引。了解如何配置uv以使用不同的包索引，以及uv如何处理索引优先级。完整指南帮助您自定义uv的包索引行为。
 ---
 
 # 包索引

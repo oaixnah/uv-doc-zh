@@ -1,5 +1,6 @@
 ---
 subtitle: Generate shell completion
+description: 生成 shell 补全脚本。
 ---
 
 # 生成 Shell 补全

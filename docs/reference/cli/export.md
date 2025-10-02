@@ -1,5 +1,6 @@
 ---
 title: uv export
+description: 将项目的锁文件导出为其他格式。
 ---
 
 # uv export

@@ -1,5 +1,6 @@
 ---
 title: uv venv
+description: 创建虚拟环境。
 ---
 
 # uv venv

@@ -1,7 +1,6 @@
 ---
 title: 使用备用包索引
-description:
-  一份关于如何通过 uv 使用备用包索引的指南，包括 Azure Artifacts、Google Artifact Registry、AWS CodeArtifact 等。
+description: 一份关于如何通过 uv 使用备用包索引的指南，包括 Azure Artifacts、Google Artifact Registry、AWS CodeArtifact 等。
 ---
 
 # 使用备用包索引

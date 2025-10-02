@@ -1,6 +1,7 @@
 ---
 title: 管理项目依赖
 subtitle: Managing dependencies
+description: 学习如何管理Python项目的依赖项，包括定义项目支持的Python版本、添加和移除依赖项、以及配置可选依赖项。完整指南帮助您确保项目在不同Python环境中正确运行。
 ---
 
 # 管理依赖

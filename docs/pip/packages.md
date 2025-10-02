@@ -1,5 +1,6 @@
 ---
 subtitle: Managing packages
+description: 一份关于 uv 管理 Python 包的指南，包括安装、升级、卸载、检查包等。
 ---
 
 # 管理包

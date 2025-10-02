@@ -1,6 +1,7 @@
 ---
 title: 配置项目
 subtitle: Configuring projects
+description: 学习如何配置Python项目，包括设置Python版本要求、定义入口点（如命令行界面和图形用户界面），以及管理项目依赖项。完整指南帮助您确保项目在不同Python环境中正确运行。
 ---
 
 # 配置项目

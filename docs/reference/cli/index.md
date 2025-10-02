@@ -1,5 +1,6 @@
 ---
 subtitle: Commands
+description: 一份关于 uv 命令行接口的指南，包括安装、升级、卸载、检查包等。
 ---
 
 # CLI

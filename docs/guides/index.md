@@ -1,5 +1,6 @@
 ---
 subtitle: Guides
+description: 学习如何使用 uv 管理 Python 依赖、运行应用和使用 Docker 部署。
 ---
 
 # 使用指南

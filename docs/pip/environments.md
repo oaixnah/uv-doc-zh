@@ -1,5 +1,6 @@
 ---
 subtitle: Using environments
+description: 一份关于 uv 使用 Python 环境的指南，包括创建虚拟环境、使用虚拟环境等。
 ---
 
 # 使用 Python 环境

@@ -1,5 +1,6 @@
 ---
 title: uv cache
+description: 管理 uv 的缓存。
 ---
 
 # uv cache

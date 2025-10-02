@@ -1,5 +1,6 @@
 ---
 subtitle: Environment variables
+description: 了解 uv 项目的环境变量。
 ---
 
 # 环境变量

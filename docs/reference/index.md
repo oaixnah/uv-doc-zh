@@ -1,5 +1,6 @@
 ---
 subtitle: Reference
+description: 了解 uv 项目的参考文档。
 ---
 
 # 参考

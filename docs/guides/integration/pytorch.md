@@ -1,7 +1,6 @@
 ---
 title: 结合 uv 使用 PyTorch
-description:
-  一份结合 uv 使用 PyTorch 的指南，内容包括安装 PyTorch、配置跨平台和跨加速器的构建等。
+description: 一份结合 uv 使用 PyTorch 的指南，内容包括安装 PyTorch、配置跨平台和跨加速器的构建等。
 ---
 
 # 结合 uv 使用 PyTorch

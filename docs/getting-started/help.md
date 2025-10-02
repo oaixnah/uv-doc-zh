@@ -1,5 +1,6 @@
 ---
 subtitle: Getting help
+description: 学习如何获取uv的帮助，包括查看帮助菜单、查看版本和在GitHub上开启issue。完整指南帮助您解决uv使用过程中的问题。
 ---
 
 # 获取帮助

@@ -1,7 +1,6 @@
 ---
 title: 在 AWS Lambda 中使用 uv
-description:
-  一份关于在 AWS Lambda 中使用 uv 管理 Python 依赖并通过 Docker 容器或 zip 压缩包部署无服务器函数的完整指南。
+description: 一份关于在 AWS Lambda 中使用 uv 管理 Python 依赖并通过 Docker 容器或 zip 压缩包部署无服务器函数的完整指南。
 ---
 
 # 在 AWS Lambda 中使用 uv

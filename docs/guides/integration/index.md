@@ -1,5 +1,6 @@
 ---
 subtitle: Integrations
+description: 了解如何将 uv 与其他软件集成，包括 Docker、Jupyter notebooks、marimo notebooks、pre-commit、GitHub Actions 和 GitLab CI/CD。
 ---
 
 # 集成

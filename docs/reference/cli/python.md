@@ -1,5 +1,6 @@
 ---
 title: uv python
+description: 管理 Python 版本和安装。
 ---
 
 # uv python

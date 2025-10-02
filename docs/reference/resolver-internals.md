@@ -1,5 +1,6 @@
 ---
 subtitle: Resolver
+description: 了解 uv 项目的解析器内部原理。
 ---
 
 # 解析器内部原理

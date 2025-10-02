@@ -1,5 +1,6 @@
 ---
 title: uv tool
+description: 运行和安装由 Python 包提供的命令。
 ---
 
 # uv tool

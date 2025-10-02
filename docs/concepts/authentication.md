@@ -1,5 +1,6 @@
 ---
 subtitle: Authentication
+description: 学习如何使用uv进行Python项目的认证，包括从Git安装包和支持SSH和密码/令牌认证。完整指南帮助您安全地管理项目依赖项。
 ---
 
 # 认证

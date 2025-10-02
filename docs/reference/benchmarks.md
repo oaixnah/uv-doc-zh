@@ -1,5 +1,6 @@
 ---
 subtitle: Benchmarks
+description: 了解 uv 项目的基准测试。
 ---
 
 # 基准测试

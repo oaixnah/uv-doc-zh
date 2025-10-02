@@ -1,8 +1,7 @@
 ---
 title: 运行脚本
 subtitle: Running scripts
-description:
-  一份关于使用 uv 运行 Python 脚本的指南，包括对内联依赖元数据、可复现脚本等的支持。
+description: 一份关于使用 uv 运行 Python 脚本的指南，包括对内联依赖元数据、可复现脚本等的支持。
 ---
 
 # 运行脚本

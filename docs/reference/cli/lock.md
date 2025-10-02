@@ -1,5 +1,6 @@
 ---
 title: uv lock
+description: 更新项目的锁文件。
 ---
 
 # uv lock

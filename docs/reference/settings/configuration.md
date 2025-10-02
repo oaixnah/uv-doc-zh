@@ -1,5 +1,6 @@
 ---
 subtitle: Configuration
+description: 了解 uv 项目的配置选项。
 ---
 
 ## 配置

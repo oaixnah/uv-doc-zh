@@ -1,5 +1,6 @@
 ---
 subtitle: Configuration files
+description: 学习如何使用uv配置Python项目，包括项目级别和用户级别配置文件、配置选项和优先级。完整指南帮助您自定义uv的行为，以满足您的项目需求。
 ---
 
 # 配置文件

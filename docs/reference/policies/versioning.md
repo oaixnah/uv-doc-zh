@@ -1,5 +1,6 @@
 ---
 subtitle: Versioning
+description: 了解 uv 项目的版本控制方案。
 ---
 
 # 版本控制

@@ -1,5 +1,6 @@
 ---
 title: uv self
+description: 管理 uv 可执行文件
 ---
 
 # uv self

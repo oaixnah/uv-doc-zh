@@ -1,5 +1,6 @@
 ---
 subtitle: Inspecting environments
+description: 一份关于 uv 检查 Python 环境的指南，包括列出已安装的包、检查一个包、验证环境等。
 ---
 
 # 检查环境

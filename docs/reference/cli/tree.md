@@ -1,5 +1,6 @@
 ---
 title: uv tree
+description: 显示项目的依赖树。
 ---
 
 # uv tree

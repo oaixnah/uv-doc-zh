@@ -1,7 +1,6 @@
 ---
 title: 将 uv 与 marimo 结合使用
-description:
-  一份将 uv 与 marimo notebook 结合使用于交互式计算、脚本执行和数据应用的完整指南。
+description: 一份将 uv 与 marimo notebook 结合使用于交互式计算、脚本执行和数据应用的完整指南。
 ---
 
 # 将 uv 与 marimo 结合使用

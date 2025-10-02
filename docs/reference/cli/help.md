@@ -1,5 +1,6 @@
 ---
 title: uv help
+description: 显示命令的文档。
 ---
 
 # uv help

@@ -1,7 +1,6 @@
 ---
 title: 在 Docker 中使用 uv
-description:
-  一份在 Docker 中使用 uv 管理 Python 依赖的完整指南，同时通过多阶段构建、中间层等方式优化构建时间和镜像大小。
+description: 一份在 Docker 中使用 uv 管理 Python 依赖的完整指南，同时通过多阶段构建、中间层等方式优化构建时间和镜像大小。
 ---
 
 # 在 Docker 中使用 uv

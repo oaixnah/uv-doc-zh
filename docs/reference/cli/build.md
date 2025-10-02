@@ -1,5 +1,6 @@
 ---
 title: uv build
+description: 构建 Python 包为源码分发包和轮子包。
 ---
 
 # uv build

@@ -1,5 +1,6 @@
 ---
 subtitle: Platform support
+description: 了解 uv 项目的平台支持。
 ---
 
 # 平台支持
