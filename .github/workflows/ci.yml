@@ -7,20 +7,22 @@ permissions:
   contents: write
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Configure Git Credentials
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-      - name: Install dependencies
-        run: ~/.local/bin/uv sync
-      - name: Build
-        run: ~/.local/bin/uv run mkdocs gh-deploy --force
-        env:
-          UV_ANALYTICS_PROVIDER: ${{ secrets.ANALYTICS_PROVIDER }}
-          UV_GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
-          UV_CLARITY_PROJECT_ID: ${{ secrets.CLARITY_PROJECT_ID }}
-          PROD: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: ~/.cache
+          restore-keys: |
+            mkdocs-material-
+      - run: pip install mkdocs-material
+      - run: mkdocs gh-deploy --force
