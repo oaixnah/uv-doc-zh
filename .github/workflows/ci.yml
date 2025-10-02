@@ -26,3 +26,8 @@ jobs:
             mkdocs-material-
       - run: pip install mkdocs-material
       - run: mkdocs gh-deploy --force
+        env:
+          UV_ANALYTICS_PROVIDER: ${{ secrets.ANALYTICS_PROVIDER }}
+          UV_GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
+          UV_CLARITY_PROJECT_ID: ${{ secrets.CLARITY_PROJECT_ID }}
+          PROD: true
