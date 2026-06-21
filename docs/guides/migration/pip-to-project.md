@@ -380,11 +380,37 @@ $ sed '/^-r /d' requirements-dev.in | uv add --dev -r - -c requirements-dev.txt
 $ uv add -r requirements-docs.in -c requirements-docs.txt --group docs
 ```
 
+#### 导入依赖源
+
+当导入本地路径或 Git 仓库中的依赖时，例如：
+
+```python title="requirements.in"
+./path-dep
+-e ./editable-path-dep
+git-dep @ git+https://github.com/astral-sh/git-dep
+```
+
+uv 会将它们映射到 `pyproject.toml` 的 `[tool.uv.sources]` 表中的[依赖源（dependency sources）](../../concepts/projects/dependencies.md#dependency-sources)：
+
+```toml title="pyproject.toml"
+[project]
+dependencies = [
+    "path-dep",
+    "editable-path-dep",
+    "git-dep",
+]
+
+[tool.uv.sources]
+path-dep = { path = "./path-dep" }
+editable-path-dep = { path = "./editable-path-dep", editable = true }
+git-dep = { git = "https://github.com/astral-sh/git-dep" }
+```
+
 ### 项目环境
 
-与 `pip` 不同，uv 并不以“活动”虚拟环境的概念为中心。相反，uv 为每个项目在 `.venv` 目录中使用一个专用的虚拟环境。这个环境是自动管理的，所以当你运行一个命令，比如 `uv add`，环境会与项目依赖同步。
+与 `pip` 不同，uv 并不以"活动"虚拟环境的概念为中心。相反，uv 为每个项目在 `.venv` 目录中使用一个专用的虚拟环境。该环境是自动管理的，因此当你运行命令（如 `uv add`）时，环境会与项目依赖保持同步。
 
-在环境中执行命令的首选方法是使用 `uv run`，例如：
+在环境中执行命令的首选方式是使用 `uv run`，例如：
 
 ```console
 $ uv run pytest
