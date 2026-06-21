@@ -266,8 +266,7 @@ $ uv lock --script example.py
 
 除了锁定依赖项外，uv 还支持内联脚本元数据的 `tool.uv` 部分中的 `exclude-newer` 字段，以限制 uv 仅考虑在特定日期之前发布的发行版。这对于在稍后的时间点运行时提高脚本的可复现性很有用。
 
-日期必须指定为 [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html) 时间戳
-（例如，`2006-12-02T02:07:43Z`）。
+日期必须指定为 [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html) 时间戳（例如，`2006-12-02T02:07:43Z`）。
 
 ```python title="example.py"
 # /// script
