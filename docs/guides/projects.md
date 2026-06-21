@@ -12,22 +12,23 @@ uv 支持管理 Python 项目，这些项目在 `pyproject.toml` 文件中定义
 
 你可以使用 `uv init` 命令创建一个新的 Python 项目：
 
-```console
-$ uv init hello-world
-$ cd hello-world
+```bash
+uv init hello-world
+cd hello-world
 ```
 
 或者，你可以在工作目录中初始化一个项目：
 
-```console
-$ mkdir hello-world
-$ cd hello-world
-$ uv init
+```bash
+mkdir hello-world
+cd hello-world
+uv init
 ```
 
 uv 将创建以下文件：
 
-```text
+```console
+├── .git/
 ├── .gitignore
 ├── .python-version
 ├── README.md
@@ -50,10 +51,12 @@ Hello from hello-world!
 
 ```text
 .
-├── .venv
+├── .git/
+├── .venv/
 │   ├── bin
 │   ├── lib
 │   └── pyvenv.cfg
+├── .gitignore
 ├── .python-version
 ├── README.md
 ├── main.py
@@ -104,42 +107,73 @@ dependencies = []
 
 你可以使用 `uv add` 命令将依赖项添加到你的 `pyproject.toml` 中。这也将更新锁文件和项目环境：
 
-```console
-$ uv add requests
+```bash
+uv add requests
 ```
 
 你还可以指定版本约束或备用源：
 
-```console
-$ # 指定版本约束
-$ uv add 'requests==2.31.0'
+```bash
+# 指定版本约束
+uv add 'requests==2.31.0'
 
-$ # 添加一个 git 依赖
-$ uv add git+https://github.com/psf/requests
+# 添加一个 git 依赖
+uv add git+https://github.com/psf/requests
 ```
 
 如果你正在从 `requirements.txt` 文件迁移，你可以使用带有 `-r` 标志的 `uv add` 来添加文件中的所有依赖项：
 
-```console
-$ # 从 `requirements.txt` 添加所有依赖项。
-$ uv add -r requirements.txt -c constraints.txt
+```bash
+# 从 `requirements.txt` 添加所有依赖项。
+uv add -r requirements.txt -c constraints.txt
 ```
 
 要移除一个包，你可以使用 `uv remove`：
 
-```console
-$ uv remove requests
+```bash
+uv remove requests
 ```
 
 要升级一个包，请使用带有 `--upgrade-package` 标志的 `uv lock`：
 
-```console
-$ uv lock --upgrade-package requests
+```bash
+uv lock --upgrade-package requests
 ```
 
 `--upgrade-package` 标志将尝试将指定的包更新到最新的兼容版本，同时保持锁文件的其余部分不变。
 
 有关更多详细信息，请参阅[管理依赖项](../concepts/projects/dependencies.md)的文档。
+
+## 查看你的版本
+
+`uv version` 命令可用于查看你的包的版本。
+
+要获取包的版本，请运行 `uv version`：
+
+```console
+$ uv version
+hello-world 0.7.0
+```
+
+要获取不含包名的版本，请使用 `--short` 选项：
+
+```console
+$ uv version --short
+0.7.0
+```
+
+要以 JSON 格式获取版本信息，请使用 `--output-format json` 选项：
+
+```console
+$ uv version --output-format json
+{
+    "package_name": "hello-world",
+    "version": "0.7.0",
+    "commit_info": null
+}
+```
+
+有关更新包版本的详细信息，请参阅[发布指南](./package.md#updating-your-version)。
 
 ## 运行命令
 
@@ -147,11 +181,16 @@ $ uv lock --upgrade-package requests
 
 在每次调用 `uv run` 之前，uv 将验证锁文件是否与 `pyproject.toml` 同步，以及环境是否与锁文件同步，从而使你的项目保持同步，无需手动干预。`uv run` 保证你的命令在一致、锁定的环境中运行。
 
+!!! note
+
+    默认情况下，`uv run` 不会从环境中移除无关包（即不在锁文件中的包）。
+    有关详细信息，请参阅[处理无关包](../concepts/projects/sync.md#handling-of-extraneous-packages)。
+
 例如，要使用 `flask`：
 
-```console
-$ uv add flask
-$ uv run -- flask run -p 3000
+```bash
+uv add flask
+uv run -- flask run -p 3000
 ```
 
 或者，运行一个脚本：
@@ -163,19 +202,19 @@ import flask
 print("hello world")
 ```
 
-```console
-$ uv run example.py
+```bash
+uv run example.py
 ```
 
 或者，你可以使用 `uv sync` 手动更新环境，然后在执行命令前激活它：
 
 === "macOS 和 Linux"
 
-    ```console
-    $ uv sync
-    $ source .venv/bin/activate
-    $ flask run -p 3000
-    $ python example.py
+    ```bash
+    uv sync
+    source .venv/bin/activate
+    flask run -p 3000
+    python example.py
     ```
 
 === "Windows"
