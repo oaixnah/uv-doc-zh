@@ -125,7 +125,6 @@ nav:
           - JFrog Artifactory: guides/integration/jfrog.md
           - Renovate: guides/integration/renovate.md
           - Dependabot: guides/integration/dependabot.md
-          - Alternative indexes: guides/integration/alternative-indexes.md
           - AWS Lambda: guides/integration/aws-lambda.md
   - 概念:
       - concepts/index.md
