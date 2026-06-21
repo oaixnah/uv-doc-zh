@@ -123,6 +123,7 @@ nav:
           - Google Artifact Registry: guides/integration/google.md
           - AWS CodeArtifact: guides/integration/aws.md
           - JFrog Artifactory: guides/integration/jfrog.md
+          - Renovate: guides/integration/renovate.md
           - Alternative indexes: guides/integration/alternative-indexes.md
           - Dependency bots: guides/integration/dependency-bots.md
           - AWS Lambda: guides/integration/aws-lambda.md
