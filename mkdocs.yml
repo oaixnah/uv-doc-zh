@@ -124,8 +124,8 @@ nav:
           - AWS CodeArtifact: guides/integration/aws.md
           - JFrog Artifactory: guides/integration/jfrog.md
           - Renovate: guides/integration/renovate.md
+          - Dependabot: guides/integration/dependabot.md
           - Alternative indexes: guides/integration/alternative-indexes.md
-          - Dependency bots: guides/integration/dependency-bots.md
           - AWS Lambda: guides/integration/aws-lambda.md
   - 概念:
       - concepts/index.md
