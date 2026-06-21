@@ -7,11 +7,11 @@ description: 在 GitHub Actions 中使用 uv 的指南，包括安装、设置 P
 
 ## 安装
 
-对于在 GitHub Actions 中使用，我们推荐官方的 [`astral-sh/setup-uv`](https://github.com/astral-sh/setup-uv) action，它会安装 uv，将其添加到 PATH，（可选）持久化缓存等，并支持所有 uv 支持的平台。
+在 GitHub Actions 中使用 uv 时，我们推荐使用官方的 [`astral-sh/setup-uv`](https://github.com/astral-sh/setup-uv) action，它可以安装 uv、将其添加到 PATH、（可选）持久化缓存等，并支持所有 uv 兼容的平台。
 
-要安装最新版本的 uv：
+安装最新版本的 uv：
 
-```yaml title="example.yml" hl_lines="11-12"
+```yaml title="example.yml" hl_lines="11 12"
 name: Example
 
 jobs:
@@ -20,13 +20,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
 ```
 
-最佳实践是固定到特定的 uv 版本，例如：
+建议锁定到特定的 uv 版本，这是一种最佳实践，例如：
 
 ```yaml title="example.yml" hl_lines="14 15"
 name: Example
@@ -37,13 +37,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           # Install a specific version of uv.
-          version: "0.8.18"
+          version: "0.11.23"
 ```
 
 ## 设置 Python
@@ -59,24 +59,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
 
       - name: Set up Python
         run: uv python install
 ```
 
-这将遵循项目中固定的 Python 版本。
+这将遵循项目中锁定的 Python 版本。
 
-或者，可以使用官方的 GitHub `setup-python` action。这可能会更快，因为 GitHub 会将 Python 版本与运行器一起缓存。
+或者，也可以使用 GitHub 官方的 `setup-python` action。这可能会更快，因为 GitHub 会将 Python 版本与 runner 一起缓存。
 
-设置
-[`python-version-file`](https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#using-the-python-version-file-input)
-选项以使用项目中固定的版本：
+设置 [`python-version-file`](https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#using-the-python-version-file-input) 选项以使用项目锁定的版本：
 
-```yaml title="example.yml" hl_lines="14 15 16 17"
+```yaml title="example.yml" hl_lines="14"
 name: Example
 
 jobs:
@@ -85,20 +83,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@v6
 
       - name: "Set up Python"
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version-file: ".python-version"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
 ```
 
-或者，指定 `pyproject.toml` 文件以忽略固定版本，并使用与项目的 `requires-python` 约束兼容的最新版本：
+或者，指定 `pyproject.toml` 文件以忽略锁定版本，使用与项目 `requires-python` 约束兼容的最新版本：
 
-```yaml title="example.yml" hl_lines="17"
+```yaml title="example.yml" hl_lines="14"
 name: Example
 
 jobs:
@@ -107,20 +105,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@v6
 
       - name: "Set up Python"
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version-file: "pyproject.toml"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
 ```
 
 ## 多个 Python 版本
 
-当使用矩阵测试多个 Python 版本时，使用 `astral-sh/setup-uv` 设置 Python 版本，这将覆盖 `pyproject.toml` 或 `.python-version` 文件中的 Python 版本规范：
+当使用矩阵（matrix）策略测试多个 Python 版本时，可以通过 `astral-sh/setup-uv` 设置 Python 版本，这将覆盖 `pyproject.toml` 或 `.python-version` 文件中的 Python 版本配置：
 
 ```yaml title="example.yml" hl_lines="17 18"
 jobs:
@@ -135,15 +133,15 @@ jobs:
           - "3.12"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Install uv and set the python version
-        uses: astral-sh/setup-uv@v5
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           python-version: ${{ matrix.python-version }}
 ```
 
-如果不使用 `setup-uv` action，可以设置 `UV_PYTHON` 环境变量：
+如果不使用 `setup-uv` action，你可以设置 `UV_PYTHON` 环境变量：
 
 ```yaml title="example.yml" hl_lines="12"
 jobs:
@@ -159,14 +157,14 @@ jobs:
     env:
       UV_PYTHON: ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 ```
 
-## 同步和运行
+## 同步与运行
 
-安装 uv 和 Python 后，可以使用 `uv sync` 安装项目，并使用 `uv run` 在环境中运行命令：
+安装 uv 和 Python 之后，可以使用 `uv sync` 安装项目，并使用 `uv run` 在环境中运行命令：
 
-```yaml title="example.yml" hl_lines="17-22"
+```yaml title="example.yml" hl_lines="15 17-22"
 name: Example
 
 jobs:
@@ -175,10 +173,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
 
       - name: Install the project
         run: uv sync --locked --all-extras --dev
@@ -190,54 +188,22 @@ jobs:
 
 !!! tip
 
-    [`UV_PROJECT_ENVIRONMENT` 设置](../../concepts/projects/config.md#_9) 可用于安装到系统 Python 环境，而不是创建虚拟环境。
+    [`UV_PROJECT_ENVIRONMENT` 设置](../../concepts/projects/config.md#project-environment-path)可用于将依赖安装到系统 Python 环境中，而不是创建虚拟环境。
 
 ## 缓存
 
-在工作流运行之间存储 uv 的缓存可能会缩短 CI 时间。
+在多次工作流运行之间存储 uv 的缓存可以缩短 CI 耗时。
 
-[`astral-sh/setup-uv`](https://github.com/astral-sh/setup-uv) 内置了对持久化缓存的支持：
+[`astral-sh/setup-uv`](https://github.com/astral-sh/setup-uv) 内置了缓存持久化支持：
 
 ```yaml title="example.yml"
 - name: Enable caching
-  uses: astral-sh/setup-uv@v5
+  uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
   with:
     enable-cache: true
 ```
 
-您可以配置 action 以在运行器上使用自定义缓存目录：
-
-```yaml title="example.yml"
-- name: Define a custom uv cache path
-  uses: astral-sh/setup-uv@v5
-  with:
-    enable-cache: true
-    cache-local-path: "/path/to/cache"
-```
-
-或在锁文件更改时使其失效：
-
-```yaml title="example.yml"
-- name: Define a cache dependency glob
-  uses: astral-sh/setup-uv@v5
-  with:
-    enable-cache: true
-    cache-dependency-glob: "uv.lock"
-```
-
-或在任何需求文件更改时：
-
-```yaml title="example.yml"
-- name: Define a cache dependency glob
-  uses: astral-sh/setup-uv@v5
-  with:
-    enable-cache: true
-    cache-dependency-glob: "requirements**.txt"
-```
-
-请注意，`astral-sh/setup-uv` 将自动为每个主机架构和平台使用单独的缓存键。
-
-或者，您可以使用 `actions/cache` action 手动管理缓存：
+或者，你也可以使用 `actions/cache` action 手动管理缓存：
 
 ```yaml title="example.yml"
 jobs:
@@ -250,7 +216,7 @@ jobs:
       # ... setup up Python and uv ...
 
       - name: Restore uv cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /tmp/.uv-cache
           key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
@@ -264,7 +230,7 @@ jobs:
         run: uv cache prune --ci
 ```
 
-`uv cache prune --ci` 命令用于减小缓存大小，并针对 CI 进行了优化。其对性能的影响取决于正在安装的软件包。
+`uv cache prune --ci` 命令用于减少缓存大小，并针对 CI 进行了优化。其对性能的影响取决于所安装的包。
 
 !!! tip
 
@@ -274,7 +240,7 @@ jobs:
 
     [post-job-hook]: https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/running-scripts-before-or-after-a-job
 
-    当使用非临时、自托管的运行器时，默认缓存目录可能会无限增长。在这种情况下，在作业之间共享缓存可能不是最佳选择。相反，应将缓存移动到 GitHub 工作区内，并在作业完成时使用[作业后挂钩][post-job-hook]将其删除。
+    当使用非临时的自托管 runner 时，默认缓存目录可能会无限增长。在这种情况下，在作业之间共享缓存可能不是最优选择。建议将缓存移到 GitHub Workspace 内部，并在作业完成后使用 [Post Job Hook][post-job-hook] 将其删除。
 
     ```yaml
     install_job:
@@ -283,7 +249,7 @@ jobs:
         UV_CACHE_DIR: ${{ github.workspace }}/.cache/uv
     ```
 
-    使用作业后挂钩需要在自托管运行器上将 `ACTIONS_RUNNER_HOOK_JOB_STARTED` 环境变量设置为清理脚本的路径，如下所示。
+    使用 post job hook 需要在自托管 runner 上将 `ACTIONS_RUNNER_HOOK_JOB_STARTED` 环境变量设置为清理脚本的路径，如下所示。
 
     ```sh title="clean-uv-cache.sh"
     #!/usr/bin/env sh
@@ -292,11 +258,11 @@ jobs:
 
 ## 使用 `uv pip`
 
-如果使用 `uv pip` 接口而不是 uv 项目接口，uv 默认需要一个虚拟环境。要允许将软件包安装到系统环境中，请在所有 `uv` 调用中使用 `--system` 标志或设置 `UV_SYSTEM_PYTHON` 变量。
+如果使用 `uv pip` 接口而非 uv 项目接口，uv 默认需要虚拟环境。要允许将包安装到系统环境中，可以在所有 `uv` 调用中使用 `--system` 标志，或设置 `UV_SYSTEM_PYTHON` 变量。
 
-`UV_SYSTEM_PYTHON` 变量可以在不同的作用域中定义。
+`UV_SYSTEM_PYTHON` 变量可以在不同作用域中定义。
 
-通过在顶层定义它来为整个工作流选择加入：
+在顶层定义以对整个工作流启用：
 
 ```yaml title="example.yml"
 env:
@@ -305,7 +271,7 @@ env:
 jobs: ...
 ```
 
-或者，为工作流中的特定作业选择加入：
+或者，对工作流中的特定作业启用：
 
 ```yaml title="example.yml"
 jobs:
@@ -315,7 +281,7 @@ jobs:
     ...
 ```
 
-或者，为作业中的特定步骤选择加入：
+或者，对作业中的特定步骤启用：
 
 ```yaml title="example.yml"
 steps:
@@ -325,17 +291,17 @@ steps:
       UV_SYSTEM_PYTHON: 1
 ```
 
-要再次选择退出，可以在任何 uv 调用中使用 `--no-system` 标志。
+要再次退出系统模式，可以在任何 uv 调用中使用 `--no-system` 标志。
 
 ## 私有仓库
 
-如果您的项目对私有 GitHub 仓库有[依赖项](../../concepts/projects/dependencies.md#git)，您将需要配置一个[个人访问令牌 (PAT)][PAT] 以允许 uv 获取它们。
+如果你的项目依赖私有 GitHub 仓库（[dependencies](../../concepts/projects/dependencies.md#git)），你需要配置[个人访问令牌 (personal access token, PAT)][PAT] 以允许 uv 获取它们。
 
-在创建具有对私有仓库的读取访问权限的 PAT 后，将其添加为[仓库机密]。
+创建具有私有仓库读取权限的 PAT 后，将其添加为[仓库密钥 (repository secret)]。
 
-然后，您可以使用 [`gh`](https://cli.github.com/) CLI（默认安装在 GitHub Actions 运行器中）为 Git 配置一个[凭据帮助程序](../../concepts/authentication.md#git_1)，以使用 PAT 查询托管在 `github.com` 上的仓库。
+然后，你可以使用 [`gh`](https://cli.github.com/) CLI（默认安装在 GitHub Actions runner 中）配置 [Git 凭据辅助程序](../../concepts/authentication/git.md#git-credential-helpers)，以便在查询 `github.com` 托管的仓库时使用 PAT。
 
-例如，如果您将仓库机密命名为 `MY_PAT`：
+例如，如果你将仓库密钥命名为 `MY_PAT`：
 
 ```yaml title="example.yml"
 steps:
@@ -349,3 +315,65 @@ steps:
   https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 [repository secret]:
   https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository
+
+## 发布到 PyPI
+
+可以使用 uv 在 GitHub Actions 中构建包并将其发布到 PyPI。我们在本指南之外还提供了一个独立示例，位于 [astral-sh/trusted-publishing-examples](https://github.com/astral-sh/trusted-publishing-examples)。该工作流使用[可信发布 (trusted publishing)](https://docs.pypi.org/trusted-publishers/)，因此无需配置凭据。
+
+在示例工作流中，我们使用一个脚本来测试源码分发包（source distribution）和 wheel 是否都能正常工作，并且没有遗漏任何文件。此步骤是推荐但可选的。
+
+首先，向你的项目添加一个发布工作流：
+
+```yaml title=".github/workflows/release.yml"
+name: "Publish release to PyPI"
+
+on:
+  push:
+    tags:
+      # Publish on any tag starting with a `v`, e.g., v0.1.0
+      - v*
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+      - name: Install Python 3.13
+        run: uv python install 3.13
+      - name: Build
+        run: uv build
+      # Check that basic features work and we didn't miss to include crucial files
+      - name: Smoke test (wheel)
+        run: uv run --isolated --no-project --with dist/*.whl tests/smoke_test.py
+      - name: Smoke test (source distribution)
+        run: uv run --isolated --no-project --with dist/*.tar.gz tests/smoke_test.py
+      - name: Publish
+        run: uv publish
+```
+
+然后，在 GitHub 仓库的 "Settings" -> "Environments" 下创建工作流中定义的环境。
+
+![GitHub settings dialog showing how to add the "pypi" environment under "Settings" -> "Environments"](../../assets/github-add-environment.png)
+
+在 PyPI 项目的 "Publishing" 设置中添加一个[可信发布者 (trusted publisher)](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)。确保所有字段与你的 GitHub 配置匹配。
+
+![PyPI project publishing settings dialog showing how to set all fields for a trusted publisher configuration](../../assets/pypi-add-trusted-publisher.png)
+
+保存后：
+
+![PyPI project publishing settings dialog showing the configured trusted publishing settings](../../assets/pypi-with-trusted-publisher.png)
+
+最后，为发布打标签并推送。确保标签以 `v` 开头以匹配工作流中的模式。
+
+```console
+$ git tag -a v0.1.0 -m v0.1.0
+$ git push --tags
+```
