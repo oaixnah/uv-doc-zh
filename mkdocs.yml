@@ -120,6 +120,7 @@ nav:
           - FastAPI: guides/integration/fastapi.md
           - Bazel: guides/integration/bazel.md
           - Azure Artifacts: guides/integration/azure.md
+          - Google Artifact Registry: guides/integration/google.md
           - Alternative indexes: guides/integration/alternative-indexes.md
           - Dependency bots: guides/integration/dependency-bots.md
           - AWS Lambda: guides/integration/aws-lambda.md
