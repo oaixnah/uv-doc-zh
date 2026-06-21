@@ -126,6 +126,7 @@ nav:
           - Renovate: guides/integration/renovate.md
           - Dependabot: guides/integration/dependabot.md
           - AWS Lambda: guides/integration/aws-lambda.md
+          - Coiled: guides/integration/coiled.md
   - 概念:
       - concepts/index.md
       - 项目:
