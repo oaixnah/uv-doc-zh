@@ -204,9 +204,10 @@ nav:
           - 元数据: reference/internals/metadata.md
       - 基准测试: reference/benchmarks.md
       - 政策:
-          - reference/policies/index.md
           - 版本控制: reference/policies/versioning.md
           - 平台支持: reference/policies/platforms.md
+          - python 支持: reference/policies/python.md
+          - rust 支持: reference/policies/rust.md
           - License: reference/policies/license.md
   - 译者经验:
       - blog/index.md
