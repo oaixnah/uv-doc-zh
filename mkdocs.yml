@@ -153,6 +153,7 @@ nav:
         - TLS 证书: concepts/authentication/certificates.md
         - 第三方服务: concepts/authentication/third-party.md
       - 缓存: concepts/cache.md
+      - 预览功能: concepts/preview.md
       - pip 接口:
           - pip/index.md
           - 使用 Python 环境: pip/environments.md
