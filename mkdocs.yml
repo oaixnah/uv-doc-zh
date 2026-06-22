@@ -145,7 +145,13 @@ nav:
       - 包索引: concepts/indexes.md
       - 解析: concepts/resolution.md
       - 构建后端: concepts/build-backend.md
-      - 认证: concepts/authentication.md
+      - 认证:
+        - concepts/authentication/index.md
+        - 使用 `uv auth` CLI: concepts/authentication/cli.md
+        - HTTP 认证: concepts/authentication/http.md
+        - GIT 认证: concepts/authentication/git.md
+        - TLS 证书: concepts/authentication/certificates.md
+        - 第三方服务: concepts/authentication/third-party.md
       - 缓存: concepts/cache.md
       - pip 接口:
           - pip/index.md
