@@ -190,6 +190,7 @@ nav:
           - 项目元数据: reference/settings/project-metadata.md
           - 配置: reference/settings/configuration.md
       - 环境变量: reference/environment.md
+      - 存储: reference/storage.md
       - 安装程序: reference/installer.md
       - 排除故障:
           - reference/troubleshooting/index.md
