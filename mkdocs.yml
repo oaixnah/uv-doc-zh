@@ -166,6 +166,7 @@ nav:
       - reference/index.md
       - 命令:
           - reference/cli/index.md
+          - uv auth: reference/cli/auth.md
           - uv run: reference/cli/run.md
           - uv init: reference/cli/init.md
           - uv add: reference/cli/add.md
@@ -175,12 +176,16 @@ nav:
           - uv lock: reference/cli/lock.md
           - uv export: reference/cli/export.md
           - uv tree: reference/cli/tree.md
+          - uv format: reference/cli/format.md
+          - uv check: reference/cli/check.md
+          - uv audit: reference/cli/audit.md
           - uv tool: reference/cli/tool.md
           - uv python: reference/cli/python.md
           - uv pip: reference/cli/pip.md
           - uv venv: reference/cli/venv.md
           - uv build: reference/cli/build.md
           - uv publish: reference/cli/publish.md
+          - uv workspace: reference/cli/workspace.md
           - uv cache: reference/cli/cache.md
           - uv self: reference/cli/self.md
           - uv shell: reference/cli/generate-shell-completion.md
