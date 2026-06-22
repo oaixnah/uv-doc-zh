@@ -199,7 +199,9 @@ nav:
       - 排除故障:
           - 构建失败: reference/troubleshooting/build-failures.md
           - 可复现的例子: reference/troubleshooting/reproducible-examples.md
-      - 解析器: reference/resolver-internals.md
+      - 内部实现:
+          - 解析器: reference/internals/resolver.md
+          - 元数据: reference/internals/metadata.md
       - 基准测试: reference/benchmarks.md
       - 政策:
           - reference/policies/index.md
