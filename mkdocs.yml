@@ -197,7 +197,6 @@ nav:
       - 存储: reference/storage.md
       - 安装程序: reference/installer.md
       - 排除故障:
-          - reference/troubleshooting/index.md
           - 构建失败: reference/troubleshooting/build-failures.md
           - 可复现的例子: reference/troubleshooting/reproducible-examples.md
       - 解析器: reference/resolver-internals.md
