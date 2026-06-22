@@ -191,7 +191,6 @@ nav:
           - uv shell: reference/cli/generate-shell-completion.md
           - uv help: reference/cli/help.md
       - 设置:
-          - reference/settings/index.md
           - 项目元数据: reference/settings/project-metadata.md
           - 配置: reference/settings/configuration.md
       - 环境变量: reference/environment.md
