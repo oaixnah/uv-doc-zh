@@ -1,28 +1,34 @@
 ---
 subtitle: Versioning
-description: 了解 uv 项目的版本控制方案。
+description: 了解 uv 项目的自定义版本控制方案，包括破坏性变更与次版本号的关系、Crate 版本控制策略、缓存版本控制以及锁文件（uv.lock）的 schema 版本管理规则。
 ---
 
-# 版本控制
+# 版本控制（Versioning）
 
-uv 使用自定义的版本控制方案，其中次要版本号用于破坏性更改，而补丁版本号用于错误修复、功能增强和其他非破坏性更改。
+uv 在生产环境中被广泛使用，是一款稳定的软件。
 
-uv 已在生产环境中广泛使用。但是，我们重视快速迭代新功能的能力，并将*可能*具有破坏性的更改收集到明确标记的版本中。
+uv 采用自定义的版本控制方案：次版本号（minor version）在发生破坏性变更时递增，补丁版本号（patch version）在错误修复、功能增强和其他非破坏性变更时递增。
 
-一旦 uv v1.0.0 发布，版本控制方案将遵循[语义化版本](https://semver.org/)。uv 要达到这个里程碑，没有必须实现的特定目标。
+我们对向后不兼容变更的谨慎程度与其预期的实际影响成正比，而非取决于任意版本号策略的硬性规定。我们重视快速迭代新功能的能力，并将*可能*具有破坏性的变更集中到明确标注的版本中发布。
 
-uv 的更新日志可以在 [GitHub 上查看](https://github.com/astral-sh/uv/blob/main/CHANGELOG.md)。
+uv 的更新日志可在 [GitHub 上查看](https://github.com/astral-sh/uv/blob/main/CHANGELOG.md)。
+
+## Crate 版本控制
+
+uv 的 crate 发布在 [crates.io](https://crates.io) 上。以下 crate 遵循正常的 uv 版本控制策略：
+
+- `uv`
+- `uv-build`
+- `uv-version`
+
+`uv` 和 `uv-build` crate 的版本号跟随二进制命令行接口的版本。这些 crate 的 Rust 接口**不**遵循语义化版本控制（Semantic Versioning）。
+
+uv 的其余 crate **不提供任何稳定性保证**。其 Rust 接口被视为内部实现且不稳定。因此，这些 crate 的版本号格式为 `0.0.x`，补丁版本号在每次 uv 发布时递增，无论该 crate 是否有变更。
 
 ## 缓存版本控制
 
-缓存版本被认为是 uv 的内部版本，因此可能会在次要版本或补丁版本中更改。更多信息请参阅[缓存版本控制](../../concepts/cache.md#_7)。
+缓存版本被视为 uv 的内部实现细节，因此可能在次版本或补丁版本中发生变更。详见[缓存版本控制](../../concepts/cache.md#cache-versioning)。
 
 ## 锁文件版本控制
 
-`uv.lock` 模式版本被视为公共 API 的一部分，因此只会在次要版本中作为破坏性更改进行递增。更多信息请参阅[锁文件版本控制](../../concepts/resolution.md#_20)。
-
-## 最低支持的 Rust 版本
-
-编译 uv 所需的最低支持的 Rust 版本在 `Cargo.toml` 的 `[workspace.package]` 部分的 `rust-version` 键中列出。它可能在任何版本（次要或补丁）中更改。它永远不会比最新的稳定版 Rust 晚 N-2 个版本，其中 N 是最新的稳定版本。例如，如果最新的稳定版 Rust 是 1.85，那么 uv 支持的最低 Rust 版本最多是 1.83。
-
-这仅与从源代码构建 uv 的用户有关。从 Python 包索引安装 uv 通常会安装预构建的二进制文件，不需要编译 Rust。
+`uv.lock` 的 schema 版本被视为公共 API 的一部分，因此只会在次版本发布中作为破坏性变更递增。详见[锁文件版本控制](../../concepts/resolution.md#lockfile-versioning)。
