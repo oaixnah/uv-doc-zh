@@ -1,4 +1,6 @@
 ---
+hide:
+  - navigation
 description: uv 是一款用 Rust 编写的极速 Python 包和项目管理器，可替代 pip、pip-tools、pipx、poetry、pyenv 等工具。支持项目管理、脚本运行、Python 版本管理、工具安装等功能，速度比 pip 快 10-100 倍。
 ---
 
