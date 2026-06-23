@@ -1,55 +1,55 @@
 ---
 subtitle: Locking environments
-description: 一份关于 uv 锁定环境的指南，包括锁定依赖项、复现环境等。
+description: 本文详细介绍了如何使用 uv pip compile 命令锁定 Python 依赖项版本，包括从 pyproject.toml、requirements.in 等源文件生成 requirements.txt 锁定文件、升级依赖项、使用 uv pip sync 同步环境、添加版本约束与构建约束，以及使用覆盖文件强制指定依赖项版本等完整工作流程。
 ---
 
-# 锁定环境
+# 锁定环境 {#locking-environments}
 
-锁定是指获取一个依赖项（例如 `ruff`），并将其确切版本写入文件。当处理许多依赖项时，锁定确切版本非常有用，这样可以复现环境。如果不进行锁定，依赖项的版本可能会随着时间的推移、使用不同的工具或跨平台而发生变化。
+锁定（Locking）是指将一个依赖项（例如 `ruff`）及其要使用的确切版本写入文件。当处理多个依赖项时，锁定确切版本非常有用，可以确保环境能够被复现（reproduce）。如果不进行锁定，依赖项的版本可能会随时间推移、使用不同工具或跨平台而发生变化。
 
-## 锁定需求
+## 锁定依赖项 {#locking-requirements}
 
-uv 允许以 `requirements.txt` 格式锁定依赖项。建议使用标准的 `pyproject.toml` 来定义依赖项，但也支持其他依赖项格式。有关如何定义依赖项的更多详细信息，请参阅[声明依赖项](dependencies.md)的文档。
+uv 允许以 `requirements.txt` 格式锁定依赖项。推荐使用标准的 `pyproject.toml` 来定义依赖项，但也支持其他依赖项格式。有关如何定义依赖项的更多详细信息，请参阅[声明依赖项](dependencies.md)的文档。
 
-要锁定在 `pyproject.toml` 中声明的依赖项：
+要锁定 `pyproject.toml` 中声明的依赖项：
 
 ```console
 $ uv pip compile pyproject.toml -o requirements.txt
 ```
 
-请注意，默认情况下，`uv pip compile` 的输出仅显示在终端，需要使用 `--output-file` / `-o` 参数才能写入文件。
+请注意，默认情况下 `uv pip compile` 的输出仅会显示在屏幕上，需要使用 `--output-file` / `-o` 参数才能写入文件。
 
-要锁定在 `requirements.in` 中声明的依赖项：
+要锁定 `requirements.in` 中声明的依赖项：
 
 ```console
 $ uv pip compile requirements.in -o requirements.txt
 ```
 
-要锁定在多个文件中声明的依赖项：
+要锁定多个文件中声明的依赖项：
 
 ```console
 $ uv pip compile pyproject.toml requirements-dev.in -o requirements-dev.txt
 ```
 
-uv 还支持旧版的 `setup.py` 和 `setup.cfg` 格式。要锁定在 `setup.py` 中声明的依赖项：
+uv 也支持传统的 `setup.py` 和 `setup.cfg` 格式。要锁定 `setup.py` 中声明的依赖项：
 
 ```console
 $ uv pip compile setup.py -o requirements.txt
 ```
 
-要从标准输入锁定依赖项，请使用 `-`：
+要从标准输入锁定依赖项，使用 `-`：
 
 ```console
 $ echo "ruff" | uv pip compile -
 ```
 
-要锁定并启用可选依赖项，例如 "foo" extra：
+要在启用可选依赖项的情况下锁定，例如启用 "foo" extra：
 
 ```console
 $ uv pip compile pyproject.toml --extra foo
 ```
 
-要锁定并启用所有可选依赖项：
+要在启用所有可选依赖项的情况下锁定：
 
 ```console
 $ uv pip compile pyproject.toml --all-extras
@@ -57,7 +57,7 @@ $ uv pip compile pyproject.toml --all-extras
 
 请注意，`requirements.in` 格式不支持 extras。
 
-要锁定当前项目目录 `pyproject.toml` 中的依赖项组，例如 `foo` 组：
+要锁定当前项目目录下 `pyproject.toml` 中的某个依赖项组（dependency group），例如组 `foo`：
 
 ```console
 $ uv pip compile --group foo
@@ -65,15 +65,15 @@ $ uv pip compile --group foo
 
 !!! important
 
-    pip-tools 的 `pip compile` 需要添加一个 `--group` 标志，[尽管他们正在考虑这样做](https://github.com/jazzband/pip-tools/issues/2062)。我们期望支持他们采用的任何语法和语义。
+    `--group` 标志需要添加到 pip-tools 的 `pip compile` 中，[尽管他们正在考虑此事](https://github.com/jazzband/pip-tools/issues/2062)。我们期望支持他们最终采用的任何语法和语义。
 
-要指定从中获取组的项目目录：
+要指定依赖项组应从哪个项目目录中获取：
 
 ```console
 $ uv pip compile --project some/path/ --group foo --group bar
 ```
 
-或者，您可以为每个组指定一个 `pyproject.toml` 的路径：
+或者，你可以为每个组指定一个 `pyproject.toml` 的路径：
 
 ```console
 $ uv pip compile --group some/path/pyproject.toml:foo --group other/pyproject.toml:bar
@@ -81,11 +81,13 @@ $ uv pip compile --group some/path/pyproject.toml:foo --group other/pyproject.to
 
 !!! note
 
-    `--group` 标志不适用于其他指定的源。例如，`uv pip compile some/path/pyproject.toml --group foo` 从 `./pyproject.toml` 而不是 `some/path/pyproject.toml` 中获取 `foo`。
+    `--group` 标志不会应用于其他指定的源文件。例如，
+    `uv pip compile some/path/pyproject.toml --group foo` 会从 `./pyproject.toml`
+    中获取 `foo`，而**不是**从 `some/path/pyproject.toml` 中获取。
 
-## 升级需求
+## 升级依赖项 {#upgrading-requirements}
 
-使用输出文件时，uv 会考虑现有输出文件中固定的版本。如果某个依赖项已固定，则在后续的编译运行中不会升级。例如：
+当使用输出文件时，uv 会考虑现有输出文件中已锁定的版本。如果某个依赖项已被锁定，则在后续的编译运行中不会被升级。例如：
 
 ```console
 $ echo "ruff==0.3.0" > requirements.txt
@@ -95,7 +97,7 @@ $ echo "ruff" | uv pip compile - -o requirements.txt
 ruff==0.3.0
 ```
 
-要升级依赖项，请使用 `--upgrade-package` 标志：
+要升级某个依赖项，使用 `--upgrade-package` 标志：
 
 ```console
 $ uv pip compile - -o requirements.txt --upgrade-package ruff
@@ -103,29 +105,29 @@ $ uv pip compile - -o requirements.txt --upgrade-package ruff
 
 要升级所有依赖项，可以使用 `--upgrade` 标志。
 
-## 同步环境
+## 同步环境 {#syncing-an-environment}
 
-可以使用 `uv pip install` 直接从其定义文件或从已编译的 `requirements.txt` 文件安装依赖项。有关更多详细信息，请参阅[从文件安装包](packages.md#_4)的文档。
+可以直接从依赖项定义文件或编译后的 `requirements.txt` 文件中使用 `uv pip install` 安装依赖项。有关更多详细信息，请参阅[从文件安装包](packages.md#installing-packages-from-files)的文档。
 
-使用 `uv pip install` 安装时，除非与锁定文件冲突，否则不会删除已安装的包。这意味着环境中可能存在未在锁定文件中声明的依赖项，这对于可复现性不是很好。为确保环境与锁定文件完全匹配，请改用 `uv pip sync`。
+使用 `uv pip install` 安装时，已安装的包不会被移除，除非它们与锁定文件冲突。这意味着环境中可能存在锁定文件中未声明的依赖项，这对可复现性不利。要确保环境与锁定文件完全匹配，请改用 `uv pip sync`。
 
-要将环境与 `requirements.txt` 文件同步：
+要使用 `requirements.txt` 文件同步环境：
 
 ```console
 $ uv pip sync requirements.txt
 ```
 
-要将环境与 `pyproject.toml` 文件同步：
+要使用 [PEP 751](https://peps.python.org/pep-0751/) 格式的 `pylock.toml` 文件同步环境：
 
 ```console
-$ uv pip sync pyproject.toml
+$ uv pip sync pylock.toml
 ```
 
-## 添加约束
+## 添加约束 {#adding-constraints}
 
-约束文件是类似 `requirements.txt` 的文件，仅控制所安装需求的*版本*。但是，在约束文件中包含包*不会*触发该包的安装。约束可用于为当前项目非依赖项的依赖项添加边界。
+约束文件（constraints files）是类似于 `requirements.txt` 的文件，仅控制已安装依赖项的_版本_。然而，在约束文件中包含某个包_不会_触发该包的安装。约束可用于为不属于当前项目依赖项的依赖项添加版本边界。
 
-要定义约束，请为包定义一个边界：
+要定义一个约束，为某个包定义一个版本边界：
 
 ```python title="constraints.txt"
 pydantic<2.0
@@ -137,17 +139,17 @@ pydantic<2.0
 $ uv pip compile requirements.in --constraint constraints.txt
 ```
 
-请注意，每个文件中可以定义多个约束，并且可以使用多个文件。
+请注意，每个文件可以定义多个约束，也可以使用多个文件。
 
-uv 还会从工作区根目录的 `pyproject.toml` 中读取 `constraint-dependencies`，并将其附加到约束文件中指定的那些依赖项。
+uv 还会从工作区根目录的 `pyproject.toml` 中读取 `constraint-dependencies`，并将其追加到约束文件中指定的那些约束之后。
 
-## 添加构建约束
+## 添加构建约束 {#adding-build-constraints}
 
-类似于 `constraints`，但专门用于构建时依赖项，包括构建运行时依赖项时所需的那些。
+与 `constraints` 类似，但专门针对构建时依赖项（build-time dependencies），包括构建运行时依赖项时所需的依赖项。
 
-构建约束文件是类似 `requirements.txt` 的文件，仅控制构建时需求的*版本*。但是，在构建约束文件中包含包*不会*在构建时触发其安装；相反，约束仅在包作为直接或传递构建时依赖项需要时才适用。构建约束可用于为当前项目中未明确声明为构建时依赖项的依赖项添加边界。
+构建约束文件是类似于 `requirements.txt` 的文件，仅控制构建时依赖项的_版本_。然而，在构建约束文件中包含某个包_不会_在构建时触发其安装；相反，约束仅在包被作为直接或传递性构建时依赖项需要时才会生效。构建约束可用于为未显式声明为当前项目构建时依赖项的依赖项添加版本边界。
 
-例如，如果一个包按如下方式定义其构建依赖项：
+例如，如果一个包定义了如下构建依赖项：
 
 ```toml title="pyproject.toml"
 [build-system]
@@ -161,17 +163,17 @@ build-backend = "setuptools.build_meta"
 setuptools==75.0.0
 ```
 
-uv 还会从工作区根目录的 `pyproject.toml` 中读取 `build-constraint-dependencies`，并将其附加到构建约束文件中指定的那些依赖项。
+uv 还会从工作区根目录的 `pyproject.toml` 中读取 `build-constraint-dependencies`，并将其追加到构建约束文件中指定的那些约束之后。
 
-## 覆盖依赖项版本
+## 覆盖依赖项版本 {#overriding-dependency-versions}
 
-覆盖文件是类似 `requirements.txt` 的文件，它强制安装特定版本的需求，而不管任何组成包声明的需求，也不管这是否被视为无效的解析。
+覆盖文件（overrides files）是类似于 `requirements.txt` 的文件，强制安装某个依赖项的特定版本，无论任何组成包声明了什么要求，也无论这是否会被视为无效的解析结果。
 
-虽然约束是*附加的*，因为它们与组成包的需求相结合，但覆盖是*绝对的*，因为它们完全取代了组成包的需求。
+约束是_叠加性_的，即它们与组成包的要求相结合；而覆盖是_绝对性_的，即它们完全替换组成包的要求。
 
-覆盖最常用于从传递依赖项中删除上限。例如，如果 `a` 需要 `c>=1.0,<2.0`，`b` 需要 `c>=2.0`，而当前项目需要 `a` 和 `b`，那么依赖项就无法解析。
+覆盖最常用于移除传递性依赖项的上限版本边界。例如，如果 `a` 要求 `c>=1.0,<2.0`，`b` 要求 `c>=2.0`，而当前项目同时要求 `a` 和 `b`，则依赖项无法解析。
 
-要定义覆盖，请为有问题的包定义新的需求：
+要定义一个覆盖，为有问题的包定义新的要求：
 
 ```python title="overrides.txt"
 c>=2.0
@@ -183,6 +185,6 @@ c>=2.0
 $ uv pip compile requirements.in --override overrides.txt
 ```
 
-现在，解析可以成功。但是，请注意，如果 `a` 是*正确的*，即它不支持 `c>=2.0`，那么在使用这些包时可能会遇到运行时错误。
+现在，解析可以成功。然而，请注意，如果 `a` _确实_不支持 `c>=2.0`，那么在使用这些包时很可能会遇到运行时错误。
 
-请注意，每个文件中可以定义多个覆盖，并且可以使用多个文件。
+请注意，每个文件可以定义多个覆盖，也可以使用多个文件。
