@@ -72,7 +72,7 @@ uv -V             # 不会包括构建提交和日期
 
 ## 问题排查
 
-参考文档包含一个针对常见问题的[故障排查指南](../reference/troubleshooting/index.md)。
+参考文档包含一个针对常见问题的[故障排查指南](../reference/troubleshooting/build-failures.md)。
 
 ## 在 GitHub 上开启一个 issue
 
