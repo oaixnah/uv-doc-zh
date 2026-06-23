@@ -280,6 +280,6 @@ $ uv tool run --from nuitka==2.6.7 nuitka --version
 
 ## 下一步 {#next-steps}
 
-要了解更多关于使用 uv 管理工具的信息，请参阅[工具概念](../concepts/tools.md)页面和[命令参考](../reference/cli.md#uv-tool)。
+要了解更多关于使用 uv 管理工具的信息，请参阅[工具概念](../concepts/tools.md)页面和[命令参考](../reference/cli/tool.md)。
 
 或者，继续阅读以了解如何[处理项目](./projects.md)。
