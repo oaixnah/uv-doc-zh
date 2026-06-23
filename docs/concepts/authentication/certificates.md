@@ -22,7 +22,7 @@ uv 支持以下 X.509 证书签名算法：
 
 默认情况下，uv 使用内置的 Mozilla 根证书进行 TLS 验证。在某些情况下，你可能希望改用平台的原生证书存储——例如，当你依赖系统证书存储中包含的企业信任根（如用于强制代理）时。
 
-要使用系统证书，可以传递 [`--system-certs`](../../reference/cli.md#uv) 标志，将 [`UV_SYSTEM_CERTS`](../../reference/environment.md#uv_system_certs) 环境变量设置为 `true`，或在 `uv.toml` 中设置 [`system-certs = true`](../../reference/settings.md#system-certs)。
+要使用系统证书，可以传递 [`--system-certs`](../../reference/cli/init.md) 标志，将 [`UV_SYSTEM_CERTS`](../../reference/environment.md#uv_system_certs) 环境变量设置为 `true`，或在 `uv.toml` 中设置 [`system-certs = true`](../../reference/settings/configuration.md#system-certs)。
 
 使用系统证书时，证书验证由 [`rustls-platform-verifier`](https://github.com/rustls/rustls-platform-verifier) 执行，该库将验证操作委托给操作系统的证书验证器。
 
@@ -44,7 +44,7 @@ uv 支持以下 X.509 证书签名算法：
 
 ## 不安全主机
 
-如果你使用的环境需要信任自签名证书或以其他方式禁用证书验证，可以通过 [`allow-insecure-host`](../../reference/settings.md#allow-insecure-host) 配置选项指示 uv 允许与指定主机建立不安全连接。例如，在 `pyproject.toml` 中添加以下内容将允许与 `example.com` 建立不安全连接：
+如果你使用的环境需要信任自签名证书或以其他方式禁用证书验证，可以通过 [`allow-insecure-host`](../../reference/settings/configuration.md#allow-insecure-host) 配置选项指示 uv 允许与指定主机建立不安全连接。例如，在 `pyproject.toml` 中添加以下内容将允许与 `example.com` 建立不安全连接：
 
 ```toml
 [tool.uv]

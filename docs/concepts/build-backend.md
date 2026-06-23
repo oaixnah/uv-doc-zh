@@ -178,23 +178,23 @@ src
 在构建源代码分发版（source distribution）时，以下文件和目录会被包含：
 
 - `pyproject.toml`。如果 uv 检测到仅限 TOML 1.1 的语法，会发出警告并自动启用 `toml-backwards-compatibility` 预览功能：`pyproject.toml` 会被重新格式化以保持向后兼容性，原始文件则保留为 `pyproject.toml.orig`。传入 `--preview-feature toml-backwards-compatibility` 可以显式启用该功能并抑制警告。
-- [`tool.uv.build-backend.module-root`](../reference/settings.md#build-backend_module-root) 下的[模块](#modules)。
+- [`tool.uv.build-backend.module-root`](../reference/settings/project-metadata.md#build-backend_module-root) 下的[模块](#modules)。
 - `project.license-files` 和 `project.readme` 引用的文件。
-- [`tool.uv.build-backend.data`](../reference/settings.md#build-backend_data) 下的所有目录。
-- 匹配 [`tool.uv.build-backend.source-include`](../reference/settings.md#build-backend_source-include) 模式的所有文件。
+- [`tool.uv.build-backend.data`](../reference/settings/project-metadata.md#build-backend_data) 下的所有目录。
+- 匹配 [`tool.uv.build-backend.source-include`](../reference/settings/project-metadata.md#build-backend_source-include) 模式的所有文件。
 
-然后，从这些内容中移除匹配 [`tool.uv.build-backend.source-exclude`](../reference/settings.md#build-backend_source-exclude) 和[默认排除规则](../reference/settings.md#build-backend_default-excludes)的项目。
+然后，从这些内容中移除匹配 [`tool.uv.build-backend.source-exclude`](../reference/settings/project-metadata.md#build-backend_source-exclude) 和[默认排除规则](../reference/settings/project-metadata.md#build-backend_default-excludes)的项目。
 
 在构建 wheel 包时，以下文件和目录会被包含：
 
-- [`tool.uv.build-backend.module-root`](../reference/settings.md#build-backend_module-root) 下的[模块](#modules)
+- [`tool.uv.build-backend.module-root`](../reference/settings/project-metadata.md#build-backend_module-root) 下的[模块](#modules)
 - `project.license-files` 引用的文件，会被复制到 `.dist-info` 目录中。
 - `project.readme`，会被复制到项目元数据中。
-- [`tool.uv.build-backend.data`](../reference/settings.md#build-backend_data) 下的所有目录，会被复制到 `.data` 目录中。
+- [`tool.uv.build-backend.data`](../reference/settings/project-metadata.md#build-backend_data) 下的所有目录，会被复制到 `.data` 目录中。
 
-然后，从这些内容中移除 [`tool.uv.build-backend.source-exclude`](../reference/settings.md#build-backend_source-exclude)、[`tool.uv.build-backend.wheel-exclude`](../reference/settings.md#build-backend_wheel-exclude) 和默认排除规则。应用源代码分发版排除规则是为了避免从源代码树直接构建 wheel 时包含比"源代码树 → 源代码分发版 → wheel"流程更多的文件。
+然后，从这些内容中移除 [`tool.uv.build-backend.source-exclude`](../reference/settings/project-metadata.md#build-backend_source-exclude)、[`tool.uv.build-backend.wheel-exclude`](../reference/settings/project-metadata.md#build-backend_wheel-exclude) 和默认排除规则。应用源代码分发版排除规则是为了避免从源代码树直接构建 wheel 时包含比"源代码树 → 源代码分发版 → wheel"流程更多的文件。
 
-wheel 没有特定的包含规则。只能有一个顶层模块，并且所有数据文件必须位于模块根目录下或相应的[数据目录](../reference/settings.md#build-backend_data)中。大多数包会将小型数据文件与源代码一起存储在模块根目录下。
+wheel 没有特定的包含规则。只能有一个顶层模块，并且所有数据文件必须位于模块根目录下或相应的[数据目录](../reference/settings/project-metadata.md#build-backend_data)中。大多数包会将小型数据文件与源代码一起存储在模块根目录下。
 
 !!! tip
 

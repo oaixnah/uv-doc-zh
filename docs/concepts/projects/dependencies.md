@@ -43,7 +43,7 @@ dependencies = ["httpx>=0.27.2"]
 [`--optional`](#optional-dependencies) 标志将依赖项添加到其他字段。
 
 依赖项将包含一个约束条件，例如 `>=0.27.2`，表示该包最新兼容版本。约束条件的类型可以通过
-[`--bounds`](../../reference/settings.md#add-bounds) 调整，也可以直接提供约束条件：
+[`--bounds`](../../reference/settings/configuration.md#add-bounds) 调整，也可以直接提供约束条件：
 
 ```console
 $ uv add "httpx>=0.20"
@@ -780,7 +780,7 @@ uv 允许依赖项是"虚拟的"，即依赖项本身不作为[包](./config.md#
 默认情况下，依赖项永远不会是虚拟的。
 
 具有 [`path` 源](#path)的依赖项如果显式设置了
-[`tool.uv.package = false`](../../reference/settings.md#package)，则可以是虚拟的。如果没有此设置，uv 会将路径依赖项视为普通包，并尝试构建它，即使项目没有声明[构建系统](./config.md#build-systems)。
+[`tool.uv.package = false`](../../reference/settings/project-metadata.md#package)，则可以是虚拟的。如果没有此设置，uv 会将路径依赖项视为普通包，并尝试构建它，即使项目没有声明[构建系统](./config.md#build-systems)。
 
 要将依赖项视为虚拟的，请在源上设置 `package = false`：
 
@@ -803,7 +803,7 @@ bar = { path = "../projects/bar", package = true }
 ```
 
 类似地，具有 [`workspace` 源](#workspace-member)的依赖项如果显式设置了
-[`tool.uv.package = false`](../../reference/settings.md#package)，则也可以是虚拟的。如果没有此设置，即使未声明[构建系统](./config.md#build-systems)，工作空间成员也会被构建。
+[`tool.uv.package = false`](../../reference/settings/project-metadata.md#package)，则也可以是虚拟的。如果没有此设置，即使未声明[构建系统](./config.md#build-systems)，工作空间成员也会被构建。
 
 _不是_依赖项的工作空间成员可以默认是虚拟的，例如，如果父 `pyproject.toml` 是：
 
