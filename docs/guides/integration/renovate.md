@@ -48,7 +48,7 @@ Renovate 支持更新通过[内联脚本元数据（inline script metadata）](.
 
 ## 依赖冷却期
 
-如果你使用了 [`exclude-newer`](../../reference/settings.md#exclude-newer) 选项，建议同时在 Renovate 中设置等效的 [`minimumReleaseAge`](https://docs.renovatebot.com/configuration-options/#minimumreleaseage) 选项，以避免出现 uv 无法锁定依赖的拉取请求。
+如果你使用了 [`exclude-newer`](../../reference/settings/configuration.md#exclude-newer) 选项，建议同时在 Renovate 中设置等效的 [`minimumReleaseAge`](https://docs.renovatebot.com/configuration-options/#minimumreleaseage) 选项，以避免出现 uv 无法锁定依赖的拉取请求。
 
 例如，如果你已将 `exclude-newer` 设置为 `1 week`，可以进行如下配置：
 
