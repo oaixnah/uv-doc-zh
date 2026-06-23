@@ -345,7 +345,7 @@ required-environments = [
 
 `tool.uv.sources` 通过附加源来丰富依赖元数据，在开发过程中纳入使用。依赖源可以是 Git 仓库、URL、本地路径或替代注册表。
 
-更多信息请参阅[依赖](../concepts/projects/dependencies.md)。
+更多信息请参阅[依赖](../../concepts/projects/dependencies.md)。
 
 **默认值**：`{}`
 
