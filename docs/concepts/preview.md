@@ -65,7 +65,7 @@ preview-features = ["foo", "bar"]
 
 以下预览功能目前可用：
 
-- `add-bounds`：允许配置 [`uv add` 的默认边界](../reference/settings.md#add-bounds)。
+- `add-bounds`：允许配置 [`uv add` 的默认边界](../reference/settings/configuration.md#add-bounds)。
 - `json-output`：允许在各种 uv 命令中使用 `--output-format json`。
 - `package-conflicts`：允许在包级别定义工作区冲突。
 - `pylock`：允许从 `pylock.toml` 文件安装。
