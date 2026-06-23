@@ -36,7 +36,7 @@ export UV_INDEX_PRIVATE_REGISTRY_PASSWORD="$AZURE_ARTIFACTS_TOKEN"
 
 `artifacts-keyring` 插件封装了 [Azure Artifacts Credential Provider 工具](https://github.com/microsoft/artifacts-credprovider)。该凭据提供程序支持多种不同的身份验证模式，包括交互式登录——有关配置信息，请参阅[该工具的文档](https://github.com/microsoft/artifacts-credprovider)。
 
-uv 仅支持在[子进程模式](../../reference/settings.md#keyring-provider)下使用 `keyring` 包。`keyring` 可执行文件必须在 `PATH` 中，即全局安装或在当前激活的环境中安装。`keyring` CLI 要求 URL 中包含用户名，且用户名必须为 `VssSessionToken`。
+uv 仅支持在[子进程模式](../../reference/settings/configuration.md#keyring-provider)下使用 `keyring` 包。`keyring` 可执行文件必须在 `PATH` 中，即全局安装或在当前激活的环境中安装。`keyring` CLI 要求 URL 中包含用户名，且用户名必须为 `VssSessionToken`。
 
 ```bash
 # 从公共 PyPI 预安装 keyring 和 Artifacts 插件
@@ -51,7 +51,7 @@ export UV_INDEX_PRIVATE_REGISTRY_USERNAME=VssSessionToken
 
 !!! note
 
-    [`tool.uv.keyring-provider`](../../reference/settings.md#keyring-provider) 设置可用于在 `uv.toml` 或 `pyproject.toml` 中启用 keyring。
+    [`tool.uv.keyring-provider`](../../reference/settings/configuration.md#keyring-provider) 设置可用于在 `uv.toml` 或 `pyproject.toml` 中启用 keyring。
 
     同样，索引的用户名也可以直接添加到索引 URL 中。
 
