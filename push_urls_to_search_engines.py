@@ -5,10 +5,11 @@
 import json
 import logging
 import os
+import sys
 import xml.etree.ElementTree as ET
 
 import requests
-from google.auth.transport.requests import Request
+from google.auth.transport.requests import AuthorizedSession
 from google.oauth2 import service_account
 
 # 初始化日志记录器，用于跟踪推送状态和排查问题
@@ -17,17 +18,17 @@ logger.setLevel(logging.DEBUG)
 
 
 def get_urls_from_website_file() -> list[str]:
-    """从本地 sitemap.xml 中提取所有待推送的 URL 列表"""
+    """从本地 site/sitemap.xml 中提取所有待推送的 URL 列表"""
     try:
         # 解析 sitemap.xml 文件
-        tree = ET.parse('sitemap.xml')
+        tree = ET.parse('site/sitemap.xml')
         root = tree.getroot()
         # sitemap 标准命名空间
         ns = {'sitemap': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
         # 提取所有 <url><loc> 中的链接地址
         return list(loc.text for loc in root.findall('sitemap:url/sitemap:loc', ns) if loc.text)
     except FileNotFoundError:
-        logger.error("sitemap.xml not found")
+        logger.error("site/sitemap.xml not found")
         return []
 
 
@@ -49,8 +50,12 @@ def to_bing_now(urls: list[str]):
             }
         )
         logger.info(f"Status: {resp.status_code}, Text: {resp.text}")
+        if resp.status_code != 200:
+            logger.error(f"Bing IndexNow push failed: {resp.status_code}")
+            sys.exit(1)
     else:
         logger.error("BING_NOW_API_KEY is not set")
+        sys.exit(1)
 
 
 def to_google_console(urls: list[str]):
@@ -68,20 +73,11 @@ def to_google_console(urls: list[str]):
             json.loads(GOOGLE_SERVICE_ACCOUNT_JSON), scopes=scopes
         )
 
-        # 创建带认证的 HTTP 会话
-        authed_session = requests.Session()
-
-        # 通过服务账号凭证获取 access token
-        request = Request()
-        credentials.refresh(request)
-
-        # 在会话头部添加 Bearer token 认证信息
-        authed_session.headers.update({
-            'Authorization': f'Bearer {credentials.token}',
-            'Content-Type': 'application/json'
-        })
+        # 使用 AuthorizedSession 自动管理 token 刷新
+        authed_session = AuthorizedSession(credentials)
 
         # 逐条向 Google Indexing API 提交 URL 更新通知
+        failed = 0
         for url in urls:
             content = {
                 "url": url,
@@ -94,8 +90,13 @@ def to_google_console(urls: list[str]):
                 logger.info(f"Successfully submitted: {url}")
             else:
                 logger.error(f"Failed to submit {url}: {response.text}")
+                failed += 1
+        if failed:
+            logger.error(f"{failed}/{len(urls)} URLs failed to submit to Google")
+            sys.exit(1)
     else:
         logger.error("GOOGLE_SERVICE_ACCOUNT_JSON not set")
+        sys.exit(1)
 
 
 if __name__ == '__main__':
@@ -103,3 +104,6 @@ if __name__ == '__main__':
     if sitemap_urls := get_urls_from_website_file():
         to_bing_now(sitemap_urls)
         to_google_console(sitemap_urls)
+    else:
+        logger.error("No URLs found in sitemap, aborting")
+        sys.exit(1)
