@@ -1,37 +1,37 @@
 ---
 title: 使用工具
 subtitle: Using tools
-description: 一份关于使用 uv 运行作为 Python 包发布的工具的指南，包括使用 uvx 进行一次性调用、请求特定工具版本、安装工具、升级工具等。
+description: 本文介绍如何使用 uv 运行和管理 Python 工具，涵盖 uvx 一次性调用、安装工具、升级工具、请求特定版本与 extras、从不同来源安装、以及旧版 Windows 脚本支持等完整指南。
 ---
 
-# 使用工具
+# 使用工具 {#using-tools}
 
-许多 Python 包提供可作为工具使用的应用程序。uv 对轻松调用和安装工具提供了专门的支持。
+许多 Python 包提供了可作为工具使用的应用程序。uv 为便捷调用和安装工具提供了专门支持。
 
-## 运行工具
+## 运行工具 {#running-tools}
 
 `uvx` 命令可以在不安装工具的情况下调用它。
 
-例如，要运行 `ruff`：
+例如，运行 `ruff`：
 
 ```console
-uvx ruff
+$ uvx ruff
 ```
 
 !!! note
 
-    这完全等同于：
+    这与以下命令完全等价：
 
     ```console
-    uv tool run ruff
+    $ uv tool run ruff
     ```
 
-    为方便起见，提供了 `uvx` 作为别名。
+    `uvx` 是为了方便而提供的别名。
 
-参数可以在工具名称后提供：
+可以在工具名称后传入参数：
 
 ```console
-uvx pycowsay hello from uv
+$ uvx pycowsay hello from uv
 
   -------------
 < hello from uv >
@@ -44,224 +44,242 @@ uvx pycowsay hello from uv
 
 ```
 
-使用 `uvx` 时，工具会安装到临时的、隔离的环境中。
+使用 `uvx` 时，工具会被安装到临时的隔离环境中。
 
 !!! note
 
-    如果您在[项目](../concepts/projects/index.md)中运行工具，并且该工具要求安装您的项目（例如，使用 `pytest` 或 `mypy` 时），您应该使用 [`uv run`](../reference/cli/run.md) 而不是 `uvx`。否则，该工具将在与您的项目隔离的虚拟环境中运行。
+    如果你在[_项目_](../concepts/projects/index.md)中运行工具，且该工具要求你的项目已安装（例如使用 `pytest` 或 `mypy` 时），你需要使用 [`uv run`](./projects.md#running-commands) 而不是 `uvx`。否则，工具将在与你的项目隔离的虚拟环境中运行。
 
-    如果您的项目结构是扁平的，例如，没有使用 `src` 目录来存放模块，那么项目本身就不需要安装，使用 `uvx` 就可以了。在这种情况下，只有当您想在项目的依赖项中固定工具的版本时，使用 `uv run` 才是有益的。
+    如果你的项目采用扁平结构（例如不使用 `src` 目录存放模块），则项目本身不需要安装，使用 `uvx` 即可。在这种情况下，只有当你希望在项目的依赖中锁定工具版本时，使用 `uv run` 才有优势。
 
-## 命令与包名不同
+## 包名与命令名不同的情况 {#commands-with-different-package-names}
 
-当调用 `uvx ruff` 时，uv 会安装提供 `ruff` 命令的 `ruff` 包。但是，有时包名和命令名会不同。
+当调用 `uvx ruff` 时，uv 会安装提供 `ruff` 命令的 `ruff` 包。但有时包名和命令名并不相同。
 
-`--from` 选项可用于从特定包调用命令，例如，由 `httpie` 提供的 `http`：
+可以使用 `--from` 选项从特定包中调用命令，例如 `httpie` 提供的 `http` 命令：
 
 ```console
-uvx --from httpie http
+$ uvx --from httpie http
 ```
 
-## 请求特定版本
+## 请求特定版本 {#requesting-specific-versions}
 
-要运行特定版本的工具，请使用 `command@<version>`：
+要运行特定版本的工具，使用 `command@<version>` 语法：
 
 ```console
-uvx ruff@0.3.0 check
+$ uvx ruff@0.3.0 check
 ```
 
-要运行最新版本的工具，请使用 `command@latest`：
+要运行最新版本的工具，使用 `command@latest`：
 
 ```console
-uvx ruff@latest check
+$ uvx ruff@latest check
 ```
 
-如上所述，`--from` 选项也可用于指定包版本：
+`--from` 选项也可以用于指定包版本，如上所示：
 
 ```console
-uvx --from 'ruff==0.3.0' ruff check
+$ uvx --from 'ruff==0.3.0' ruff check
 ```
 
-或者，要限制版本范围：
+或者限制版本范围：
 
 ```console
-uvx --from 'ruff>0.2.0,<0.3.0' ruff check
+$ uvx --from 'ruff>0.2.0,<0.3.0' ruff check
 ```
 
 请注意，`@` 语法只能用于精确版本。
 
-## 请求额外内容
+## 请求 extras {#requesting-extras}
 
-`--from` 选项可用于运行带有附加功能的工具：
-
-```console
-uvx --from 'mypy[faster-cache,reports]' mypy --xml-report mypy_report
-```
-
-这也可以与版本选择结合使用：
+`--from` 选项可用于运行带有 extras 的工具：
 
 ```console
-uvx --from 'mypy[faster-cache,reports]==1.13.0' mypy --xml-report mypy_report
+$ uvx --from 'mypy[faster-cache,reports]' mypy --xml-report mypy_report
 ```
 
-## 请求不同来源
+也可以与版本选择结合使用：
 
-`--from` 选项也可用于从其他来源安装。
+```console
+$ uvx --from 'mypy[faster-cache,reports]==1.13.0' mypy --xml-report mypy_report
+```
+
+## 请求不同来源 {#requesting-different-sources}
+
+`--from` 选项也可用于从替代来源安装。
 
 例如，从 git 拉取：
 
 ```console
-uvx --from git+https://github.com/httpie/cli httpie
+$ uvx --from git+https://github.com/httpie/cli httpie
 ```
 
-您还可以从特定的命名分支拉取最新的提交：
+你也可以从特定命名分支拉取最新提交：
 
 ```console
-uvx --from git+https://github.com/httpie/cli@master httpie
+$ uvx --from git+https://github.com/httpie/cli@master httpie
 ```
 
-或者拉取特定的标签：
+或者拉取特定标签：
 
 ```console
-uvx --from git+https://github.com/httpie/cli@3.2.4 httpie
+$ uvx --from git+https://github.com/httpie/cli@3.2.4 httpie
 ```
 
-甚至可以拉取特定的提交：
+甚至拉取特定提交：
 
 ```console
-uvx --from git+https://github.com/httpie/cli@2843b87 httpie
+$ uvx --from git+https://github.com/httpie/cli@2843b87 httpie
 ```
 
-## 带插件的命令
-
-可以包含额外的依赖项，例如，在运行 `mkdocs` 时包含 `mkdocs-material`：
+或者启用 [Git LFS](https://git-lfs.com) 支持：
 
 ```console
-uvx --with mkdocs-material mkdocs --help
+$ uvx --lfs --from git+https://github.com/astral-sh/lfs-cowsay lfs-cowsay
 ```
 
-## 安装工具
+## 带插件的命令 {#commands-with-plugins}
 
-如果一个工具经常使用，最好将其安装到持久环境中并添加到 `PATH`，而不是重复调用 `uvx`。
+可以包含额外的依赖，例如在运行 `mkdocs` 时包含 `mkdocs-material`：
+
+```console
+$ uvx --with mkdocs-material mkdocs --help
+```
+
+## 安装工具 {#installing-tools}
+
+如果某个工具使用频繁，将其安装到持久化环境并添加到 `PATH` 中会比反复调用 `uvx` 更有用。
 
 !!! tip
 
-    `uvx` 是 `uv tool run` 的一个方便的别名。所有其他与工具交互的命令都需要完整的 `uv tool` 前缀。
+    `uvx` 是 `uv tool run` 的便捷别名。所有其他与工具交互的命令都需要使用完整的 `uv tool` 前缀。
 
-要安装 `ruff`：
-
-```console
-uv tool install ruff
-```
-
-安装工具后，其可执行文件会放在 `PATH` 中的 `bin` 目录中，这样就可以在没有 uv 的情况下运行该工具。如果它不在 `PATH` 中，将会显示警告，并且可以使用 `uv tool update-shell` 将其添加到 `PATH`。
-
-安装 `ruff` 后，它应该是可用的：
+安装 `ruff`：
 
 ```console
-ruff --version
+$ uv tool install ruff
 ```
 
-与 `uv pip install` 不同，安装工具不会使其模块在当前环境中可用。例如，以下命令将失败：
+当工具被安装后，其可执行文件会被放置在 `PATH` 中的 `bin` 目录下，这样无需 uv 即可运行该工具。如果它不在 `PATH` 中，会显示警告，可以使用 `uv tool update-shell` 将其添加到 `PATH`。
+
+安装 `ruff` 后，它应该可以直接使用：
 
 ```console
-python -c "import ruff"
+$ ruff --version
 ```
 
-这种隔离对于减少工具、脚本和项目的依赖项之间的交互和冲突非常重要。
+与 `uv pip install` 不同，安装工具不会使其模块在当前环境中可用。例如，以下命令将会失败：
 
-与 `uvx` 不同，`uv tool install` 操作的是一个_包_，并将安装该工具提供的所有可执行文件。
+```console
+$ python -c "import ruff"
+```
+
+这种隔离对于减少工具、脚本和项目之间依赖的交互和冲突非常重要。
+
+与 `uvx` 不同，`uv tool install` 作用于_包_，会安装该工具提供的所有可执行文件。
 
 例如，以下命令将安装 `http`、`https` 和 `httpie` 可执行文件：
 
 ```console
-uv tool install httpie
+$ uv tool install httpie
 ```
 
-此外，可以不使用 `--from` 来包含包版本：
+此外，无需 `--from` 即可包含包版本：
 
 ```console
-uv tool install 'httpie>0.1.0'
+$ uv tool install 'httpie>0.1.0'
 ```
 
-同样，对于包来源也是如此：
+同样，也适用于包来源：
 
 ```console
-uv tool install git+https://github.com/httpie/cli
+$ uv tool install git+https://github.com/httpie/cli
 ```
 
-与 `uvx` 一样，安装可以包含额外的包：
+或带有 [Git LFS](https://git-lfs.com) 的包来源：
 
 ```console
-uv tool install mkdocs --with mkdocs-material
+$ uv tool install --lfs git+https://github.com/astral-sh/lfs-cowsay
 ```
 
-## 升级工具
-
-要升级工具，请使用 `uv tool upgrade`：
+与 `uvx` 一样，安装时可以包含额外的包：
 
 ```console
-uv tool upgrade ruff
+$ uv tool install mkdocs --with mkdocs-material
 ```
 
-工具升级将遵循安装工具时提供的版本约束。例如，`uv tool install 'ruff>=0.3,<0.4'` 后跟 `uv tool upgrade ruff` 会将 Ruff 升级到 `>=0.3,<0.4` 范围内的最新版本。
-
-要替换版本约束，请使用 `uv tool install` 重新安装工具：
+可以使用 `--with-executables-from` 标志在同一工具环境中一起安装多个相关的可执行文件。例如，以下命令将安装 `ansible` 的可执行文件，以及 `ansible-core` 和 `ansible-lint` 提供的可执行文件：
 
 ```console
-uv tool install ruff>=0.4
+$ uv tool install --with-executables-from ansible-core,ansible-lint ansible
+```
+
+## 升级工具 {#upgrading-tools}
+
+要升级工具，使用 `uv tool upgrade`：
+
+```console
+$ uv tool upgrade ruff
+```
+
+工具升级会遵循安装工具时指定的版本约束。例如，先执行 `uv tool install ruff >=0.3,<0.4`，再执行 `uv tool upgrade ruff`，会将 Ruff 升级到 `>=0.3,<0.4` 范围内的最新版本。
+
+要替换版本约束，可以使用 `uv tool install` 重新安装工具：
+
+```console
+$ uv tool install ruff>=0.4
 ```
 
 要升级所有工具：
 
 ```console
-uv tool upgrade --all
+$ uv tool upgrade --all
 ```
 
-## 请求 Python 版本
+## 请求 Python 版本 {#requesting-python-versions}
 
-默认情况下，uv 在运行、安装或升级工具时会使用您的默认 Python 解释器（它找到的第一个）。您可以使用 `--python` 选项指定要使用的 Python 解释器。
+默认情况下，uv 在运行、安装或升级工具时会使用默认的 Python 解释器（它找到的第一个）。你可以使用 `--python` 选项指定要使用的 Python 解释器。
 
-例如，在运行工具时请求特定的 Python 版本：
+例如，在运行工具时请求特定 Python 版本：
 
 ```console
-uvx --python 3.10 ruff
+$ uvx --python 3.10 ruff
 ```
 
-或者，在安装工具时：
+或者在安装工具时：
 
 ```console
-uv tool install --python 3.10 ruff
+$ uv tool install --python 3.10 ruff
 ```
 
-或者，在升级工具时：
+或者在升级工具时：
 
 ```console
-uv tool upgrade --python 3.10 ruff
+$ uv tool upgrade --python 3.10 ruff
 ```
 
-有关请求 Python 版本的更多详细信息，请参阅[Python 版本](../concepts/python-versions.md#_1)概念页面。
+有关请求 Python 版本的更多详细信息，请参阅 [Python 版本](../concepts/python-versions.md#requesting-a-version)概念页面。
 
-## 旧版 Windows 脚本
+## 旧版 Windows 脚本 {#legacy-windows-scripts}
 
-工具还支持运行[旧版 setuptools 脚本](https://packaging.python.org/en/latest/guides/distributing-packages-using-setuptools/#scripts)。这些脚本在安装后可通过 `$(uv tool dir)\<tool-name>\Scripts` 获得。
+工具也支持运行[旧版 setuptools 脚本](https://packaging.python.org/en/latest/guides/distributing-packages-using-setuptools/#scripts)。安装后，这些脚本可通过 `$(uv tool dir)\<tool-name>\Scripts` 访问。
 
-目前仅支持扩展名为 `.ps1`、`.cmd` 和 `.bat` 的旧版脚本。
+目前仅支持 `.ps1`、`.cmd` 和 `.bat` 扩展名的旧版脚本。
 
-例如，下面是运行命令提示符脚本的示例。
+例如，下面是一个运行命令提示符脚本的示例。
 
 ```console
-uv tool run --from nuitka==2.6.7 nuitka.cmd --version
+$ uv tool run --from nuitka==2.6.7 nuitka.cmd --version
 ```
 
-此外，您不需要指定扩展名。`uvx` 会自动按执行顺序为您查找以 `.ps1`、`.cmd` 和 `.bat` 结尾的文件。
+此外，你不需要指定扩展名。`uvx` 会自动按照 `.ps1`、`.cmd`、`.bat` 的执行顺序为你查找对应文件。
 
 ```console
-uv tool run --from nuitka==2.6.7 nuitka --version
+$ uv tool run --from nuitka==2.6.7 nuitka --version
 ```
 
-## 后续步骤
+## 下一步 {#next-steps}
 
-要了解有关使用 uv 管理工具的更多信息，请参阅[工具概念](../concepts/tools.md)页面和[命令参考](../reference/cli/index.md)。
+要了解更多关于使用 uv 管理工具的信息，请参阅[工具概念](../concepts/tools.md)页面和[命令参考](../reference/cli.md#uv-tool)。
 
 或者，继续阅读以了解如何[处理项目](./projects.md)。
