@@ -209,7 +209,7 @@ exclude-dependencies = ["werkzeug"]
 
 接受符合 [PEP 503](https://peps.python.org/pep-0503/)（简单仓库 API）的仓库，或按相同格式组织的本地目录。
 
-索引按定义顺序依次考虑，最先定义的索引具有最高优先级。此外，此设置提供的索引优先级高于通过 [`index_url`](#index-url) 或 [`extra_index_url`](#extra-index-url) 指定的任何索引。uv 只会考虑包含给定包的第一个索引，除非指定了替代的[索引策略](#index-strategy)。
+索引按定义顺序依次考虑，最先定义的索引具有最高优先级。此外，此设置提供的索引优先级高于通过 [`index_url`](configuration.md/#index-url) 或 [`extra_index_url`](configuration.md/#extra-index-url) 指定的任何索引。uv 只会考虑包含给定包的第一个索引，除非指定了替代的[索引策略](configuration.md/#index-strategy)。
 
 如果某个索引标记为 `explicit = true`，它将专门用于通过 `[tool.uv.sources]` 显式选择它的依赖，例如：
 
