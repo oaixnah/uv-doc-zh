@@ -128,6 +128,6 @@ $ uv python upgrade
 
 ## 下一步 {#next-steps}
 
-要了解更多关于 `uv python` 的信息，请参阅 [Python 版本概念](../concepts/python-versions.md)页面和[命令参考](../reference/cli.md#uv-python)。
+要了解更多关于 `uv python` 的信息，请参阅 [Python 版本概念](../concepts/python-versions.md)页面和[命令参考](../reference/cli/python.md)。
 
 或者，继续阅读以了解如何使用 uv [运行脚本](./scripts.md)和调用 Python。

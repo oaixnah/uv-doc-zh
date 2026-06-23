@@ -356,6 +356,6 @@ PS> uv run --with PyQt5 example_pyqt.pyw
 
 ## 下一步 {#next-steps}
 
-要了解更多关于 `uv run` 的信息，请参阅[命令参考](../reference/cli.md#uv-run)。
+要了解更多关于 `uv run` 的信息，请参阅[命令参考](../reference/cli/run.md)。
 
 或者，继续阅读以了解如何使用 uv [运行和安装工具](./tools.md)。
