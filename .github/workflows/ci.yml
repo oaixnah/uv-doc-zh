@@ -2,7 +2,6 @@ name: Build Documentation
 on:
   push:
     tags:
-      - '*.*'
       - '*.*.*'
 permissions:
   contents: write
@@ -25,10 +24,15 @@ jobs:
           path: ~/.cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material
+      - run: pip install mkdocs-material requests google-auth
       - run: mkdocs gh-deploy --force
         env:
           UV_ANALYTICS_PROVIDER: ${{ secrets.ANALYTICS_PROVIDER }}
           UV_GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
           UV_CLARITY_PROJECT_ID: ${{ secrets.CLARITY_PROJECT_ID }}
           PROD: true
+      - name: Push URLs to Search Engines
+        run: python push_urls_to_search_engines.py
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          BING_NOW_API_KEY: ${{ secrets.BING_NOW_API_KEY }}
