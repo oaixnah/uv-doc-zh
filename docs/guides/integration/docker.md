@@ -314,7 +314,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync
 ```
 
-更改 [`UV_LINK_MODE`](../../reference/settings.md#link-mode) 可以消除关于无法链接文件的警告，因为缓存和同步目标位于不同的文件系统上。
+更改 [`UV_LINK_MODE`](../../reference/settings/configuration.md#link-mode) 可以消除关于无法链接文件的警告，因为缓存和同步目标位于不同的文件系统上。
 
 如果你不挂载缓存，可以通过使用 `--no-cache` 标志或设置 `UV_NO_CACHE` 来减小镜像大小。
 

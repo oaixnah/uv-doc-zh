@@ -23,7 +23,7 @@ updates:
 
 ## 依赖冷却期
 
-如果你使用了 [`exclude-newer`](../../reference/settings.md#exclude-newer) 选项，建议同时在 Dependabot 中设置等效的 [`cooldown`](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#cooldown-) 选项，以避免出现 uv 无法锁定依赖的拉取请求（Pull Request）。
+如果你使用了 [`exclude-newer`](../../reference/settings/configuration.md#exclude-newer) 选项，建议同时在 Dependabot 中设置等效的 [`cooldown`](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#cooldown-) 选项，以避免出现 uv 无法锁定依赖的拉取请求（Pull Request）。
 
 例如，如果你将 `exclude-newer` 设置为 `1 week`，可以按如下方式配置：
 
