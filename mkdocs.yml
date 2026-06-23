@@ -1,5 +1,5 @@
 site_name: uv 中文文档
-copyright: <a href="https://github.com/oaixnah" target="_blank">译者 oaixnah</a>
+copyright: v0.11.23 <a href="https://github.com/oaixnah" target="_blank">译者 oaixnah</a>
 theme:
   name: material
   logo: assets/logo-letter.svg
@@ -41,7 +41,7 @@ theme:
         name: Switch to system preference
   custom_dir: docs/.overrides
 repo_url: https://github.com/astral-sh/uv
-repo_name: uv
+repo_name: astral-sh/uv
 site_author: charliermarsh & oaixnah
 site_url: https://uv.oaix.tech
 site_description: 一个用 Rust 编写的极速 Python 包和项目管理器。
@@ -138,6 +138,7 @@ nav:
           - 锁定与同步: concepts/projects/sync.md
           - 配置: concepts/projects/config.md
           - 构建分发版: concepts/projects/build.md
+          - 导出锁文件: concepts/projects/export.md
           - 使用工作区: concepts/projects/workspaces.md
       - 工具: concepts/tools.md
       - Python 版本: concepts/python-versions.md
