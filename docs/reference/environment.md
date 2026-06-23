@@ -562,7 +562,7 @@ uv 等待文件锁可用的时间（秒）。
 ### `UV_PYTHON_DOWNLOADS`
 <small class="added-in">added in `0.3.2`</small>
 
-等同于 [`python-downloads`](../reference/settings.md#python-downloads) 设置，以及在禁用时等同于 `--no-python-downloads` 选项。控制 uv 是否应允许 Python 下载。
+等同于 [`python-downloads`](../reference/settings/configuration.md#python-downloads) 设置，以及在禁用时等同于 `--no-python-downloads` 选项。控制 uv 是否应允许 Python 下载。
 
 ### `UV_PYTHON_DOWNLOADS_JSON_URL`
 <small class="added-in">added in `0.6.13`</small>
