@@ -1,0 +1,6030 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="学习 uv 的解析过程，包括依赖解析和版本解析。了解 uv 如何处理项目的依赖关系，以及如何确保请求的需求得到满足。完整指南帮助您理解 uv 的解析机制。">
+      
+      
+        <meta name="author" content="charliermarsh & oaixnah">
+      
+      
+        <link rel="canonical" href="https://uv.oaix.tech/concepts/resolution/">
+      
+      
+        <link rel="prev" href="../indexes/">
+      
+      
+        <link rel="next" href="../build-backend/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+
+<title>解析 | uv 中文文档</title>
+
+
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-P6XVD4K79V"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-P6XVD4K79V",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-P6XVD4K79V",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"/>
+<link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#2e183d"/>
+<meta name="msapplication-TileColor" content="#d7ff64"/>
+<meta name="theme-color" content="#ffffff"/>
+<meta name="robots" content="index,follow"/>
+<script type="application/ld+json">
+    {
+        
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Astral Chinese Docs",
+        "url": "https://docs.astral.sh"
+    }
+</script>
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "sb8qqqy4n4");
+</script>
+
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#resolution" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="uv 中文文档" class="md-header__button md-logo" aria-label="uv 中文文档" data-md-component="logo">
+      
+  <img src="../../assets/logo-letter.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            uv 中文文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              解析
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="astral-light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="astral-dark" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/astral-sh/uv" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    astral-sh/uv
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  介绍
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  入门
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  使用指南
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  概念
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  参考
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  译者经验
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../feedback/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  我要反馈
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="uv 中文文档" class="md-nav__button md-logo" aria-label="uv 中文文档" data-md-component="logo">
+      
+  <img src="../../assets/logo-letter.svg" alt="logo">
+
+    </a>
+    uv 中文文档
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/astral-sh/uv" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    astral-sh/uv
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    介绍
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    入门
+  
+
+    
+      <br>
+      <small>Getting started</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    入门
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装
+  
+
+    
+      <br>
+      <small>Installation</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/first-steps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第一步
+  
+
+    
+      <br>
+      <small>First steps</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    功能概述
+  
+
+    
+      <br>
+      <small>Features</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    获取帮助
+  
+
+    
+      <br>
+      <small>Getting help</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../guides/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    使用指南
+  
+
+    
+      <br>
+      <small>Guides</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    使用指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/install-python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装 Python
+  
+
+    
+      <br>
+      <small>Installing Python</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/scripts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    脚本
+  
+
+    
+      <br>
+      <small>Running scripts</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工具
+  
+
+    
+      <br>
+      <small>Using tools</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/projects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    项目
+  
+
+    
+      <br>
+      <small>Working on projects</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    构建和发布包
+  
+
+    
+      <br>
+      <small>Publishing packages</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../guides/migration/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    迁移
+  
+
+    
+      <br>
+      <small>Migration</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    迁移
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/migration/pip-to-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从 pip 迁移到 uv 项目
+  
+
+    
+      <br>
+      <small>From pip to a uv project</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../guides/integration/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    集成
+  
+
+    
+      <br>
+      <small>Integrations</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    集成
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/jupyter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jupyter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/marimo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    marimo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Actions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/gitlab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitLab CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/pre-commit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-commit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/pytorch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyTorch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/fastapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/bazel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bazel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/azure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure Artifacts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/google/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Artifact Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS CodeArtifact
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/jfrog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JFrog Artifactory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/renovate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Renovate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/dependabot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependabot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/aws-lambda/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Lambda
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/integration/coiled/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coiled
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概念
+  
+
+    
+      <br>
+      <small>Concepts</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    概念
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    项目
+  
+
+    
+      <br>
+      <small>Projects</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    项目
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    结构和文件
+  
+
+    
+      <br>
+      <small>Structure and files</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/init/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    创建
+  
+
+    
+      <br>
+      <small>Creating projects</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/dependencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    管理依赖
+  
+
+    
+      <br>
+      <small>Managing dependencies</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行命令
+  
+
+    
+      <br>
+      <small>Running commands</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    锁定与同步
+  
+
+    
+      <br>
+      <small>Locking and syncing</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配置
+  
+
+    
+      <br>
+      <small>Configuring projects</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    构建分发版
+  
+
+    
+      <br>
+      <small>Building distributions</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导出锁文件
+  
+
+    
+      <br>
+      <small>Exporting Lockfile</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/workspaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    使用工作区
+  
+
+    
+      <br>
+      <small>Using workspaces</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工具
+  
+
+    
+      <br>
+      <small>Tools</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 版本
+  
+
+    
+      <br>
+      <small>Python 版本</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration-files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配置文件
+  
+
+    
+      <br>
+      <small>Configuration files</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../indexes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    包索引
+  
+
+    
+      <br>
+      <small>Package indexes</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    解析
+  
+
+    
+      <br>
+      <small>Resolution</small>
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    解析
+  
+
+    
+      <br>
+      <small>Resolution</small>
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖（Dependencies）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本示例
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        平台标记（Platform Markers）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-specific-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        平台特定解析（Platform-specific Resolution）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#universal-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        通用解析（Universal Resolution）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limited-resolution-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        限定解析环境（Limited Resolution Environments）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必需环境（Required Environments）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-marker-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见标记值（Common Marker Values）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖偏好（Dependency Preferences）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolution-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        解析策略（Resolution Strategy）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-release-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        预发布版本处理（Pre-release Handling）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-version-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        多版本解析（Multi-version Resolution）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖约束（Dependency Constraints）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖覆盖（Dependency Overrides）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖元数据（Dependency Metadata）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conflicting-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        冲突依赖（Conflicting Dependencies）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lower-bounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        下限（Lower Bounds）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reproducible-resolutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可复现解析（Reproducible Resolutions）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-cooldowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖冷却期（Dependency Cooldowns）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        源码分发（Source Distribution）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lockfile-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        锁文件版本控制（Lockfile Versioning）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learn-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        了解更多
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    构建后端
+  
+
+    
+      <br>
+      <small>Build backend</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../authentication/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    认证
+  
+
+    
+      <br>
+      <small>Authentication</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    认证
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    使用 `uv auth` CLI
+  
+
+    
+      <br>
+      <small>The auth CLI</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTP 认证
+  
+
+    
+      <br>
+      <small>HTTP credentials</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/git/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIT 认证
+  
+
+    
+      <br>
+      <small>Git credentials</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/certificates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TLS 证书
+  
+
+    
+      <br>
+      <small>TLS certificates</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/third-party/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第三方服务
+  
+
+    
+      <br>
+      <small>Third-party services</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    缓存
+  
+
+    
+      <br>
+      <small>Caching</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    预览功能
+  
+
+    
+      <br>
+      <small>Preview features</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../pip/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pip 接口
+  
+
+    
+      <br>
+      <small>The pip interface</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_12" id="__nav_4_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pip 接口
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pip/environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    使用 Python 环境
+  
+
+    
+      <br>
+      <small>Using environments</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pip/packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    管理包
+  
+
+    
+      <br>
+      <small>Managing packages</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pip/inspection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    检查环境
+  
+
+    
+      <br>
+      <small>Inspecting environments</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pip/dependencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    声明依赖项
+  
+
+    
+      <br>
+      <small>Declaring dependencies</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pip/compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    锁定环境
+  
+
+    
+      <br>
+      <small>Locking environments</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pip/compatibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    与 `pip` 的兼容性
+  
+
+    
+      <br>
+      <small>Compatibility with pip</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考
+  
+
+    
+      <br>
+      <small>Reference</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/cli/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    命令
+  
+
+    
+      <br>
+      <small>Commands</small>
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    命令
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/init/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv init
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/add/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv add
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/remove/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv remove
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv sync
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/lock/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv lock
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/tree/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv tree
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/audit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/pip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv pip
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/venv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv venv
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/publish/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv publish
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/workspace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv cache
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/self/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv self
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/generate-shell-completion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv shell
+  
+
+    
+      <br>
+      <small>生成 shell 补全脚本</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    uv help
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设置
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    设置
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/settings/project-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    项目元数据
+  
+
+    
+      <br>
+      <small>Project metadata</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/settings/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    配置
+  
+
+    
+      <br>
+      <small>Configuration</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境变量
+  
+
+    
+      <br>
+      <small>Environment variables</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    存储
+  
+
+    
+      <br>
+      <small>Storage</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/installer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装程序
+  
+
+    
+      <br>
+      <small>Installer</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    排除故障
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    排除故障
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/troubleshooting/build-failures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    构建失败
+  
+
+    
+      <br>
+      <small>Build failures</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/troubleshooting/reproducible-examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    可复现的例子
+  
+
+    
+      <br>
+      <small>Reproducible examples</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内部实现
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    内部实现
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/internals/resolver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    解析器
+  
+
+    
+      <br>
+      <small>Resolver</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/internals/metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    元数据
+  
+
+    
+      <br>
+      <small>Workspace Metadata</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    基准测试
+  
+
+    
+      <br>
+      <small>Benchmarks</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    政策
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    政策
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/policies/versioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    版本控制
+  
+
+    
+      <br>
+      <small>Versioning</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/policies/platforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    平台支持
+  
+
+    
+      <br>
+      <small>Platform support</small>
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/policies/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    python 支持
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/policies/rust/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    rust 支持
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/policies/license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../blog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    译者经验
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    译者经验
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    归档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    归档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2025
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    我要反馈
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    我要反馈
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    反馈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖（Dependencies）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本示例
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        平台标记（Platform Markers）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-specific-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        平台特定解析（Platform-specific Resolution）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#universal-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        通用解析（Universal Resolution）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limited-resolution-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        限定解析环境（Limited Resolution Environments）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必需环境（Required Environments）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-marker-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见标记值（Common Marker Values）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖偏好（Dependency Preferences）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolution-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        解析策略（Resolution Strategy）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-release-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        预发布版本处理（Pre-release Handling）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-version-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        多版本解析（Multi-version Resolution）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖约束（Dependency Constraints）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖覆盖（Dependency Overrides）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖元数据（Dependency Metadata）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conflicting-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        冲突依赖（Conflicting Dependencies）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lower-bounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        下限（Lower Bounds）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reproducible-resolutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可复现解析（Reproducible Resolutions）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-cooldowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖冷却期（Dependency Cooldowns）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        源码分发（Source Distribution）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lockfile-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        锁文件版本控制（Lockfile Versioning）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learn-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        了解更多
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="导航栏" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    介绍
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    概念
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="resolution"><a class="toclink" href="#resolution">解析（Resolution）</a></h1>
+<p>解析是将一组需求（requirements）转换为满足这些需求的包版本列表的过程。解析需要递归地搜索包的兼容版本，确保请求的需求得到满足，并且所请求包的需求之间相互兼容。</p>
+<h2 id="dependencies"><a class="toclink" href="#dependencies">依赖（Dependencies）</a></h2>
+<p>大多数项目和包都有依赖。依赖是当前包正常运行所必需的其他包。包将其依赖定义为 <em>需求（requirements）</em>，大致是包名和可接受版本的组合。当前项目定义的依赖称为 <em>直接依赖（direct dependencies）</em>。当前项目的每个依赖所添加的依赖称为 <em>间接依赖（indirect dependencies）</em> 或 <em>传递依赖（transitive dependencies）</em>。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>有关依赖的详细信息，请参阅 Python Packaging 文档中的<a href="https://packaging.python.org/en/latest/specifications/dependency-specifiers/">依赖说明符页面</a>。</p>
+</div>
+<h2 id="basic-examples"><a class="toclink" href="#basic-examples">基本示例</a></h2>
+<p>为了帮助演示解析过程，请考虑以下依赖关系：</p>
+<!-- prettier-ignore -->
+<ul>
+<li>项目依赖 <code>foo</code> 和 <code>bar</code>。</li>
+<li><code>foo</code> 有一个版本 1.0.0：<ul>
+<li><code>foo 1.0.0</code> 依赖 <code>lib&gt;=1.0.0</code>。</li>
+</ul>
+</li>
+<li><code>bar</code> 有一个版本 1.0.0：<ul>
+<li><code>bar 1.0.0</code> 依赖 <code>lib&gt;=2.0.0</code>。</li>
+</ul>
+</li>
+<li><code>lib</code> 有两个版本，1.0.0 和 2.0.0。两个版本都没有依赖。</li>
+</ul>
+<p>在这个示例中，解析器必须找到一组满足项目需求的包版本。由于 <code>foo</code> 和 <code>bar</code> 都只有一个版本，因此将使用这些版本。解析还必须包含传递依赖，因此必须选择一个 <code>lib</code> 的版本。<code>foo 1.0.0</code> 允许所有可用的 <code>lib</code> 版本，但 <code>bar 1.0.0</code> 要求 <code>lib&gt;=2.0.0</code>，因此必须使用 <code>lib 2.0.0</code>。</p>
+<p>在某些解析中，可能存在多个有效解。请考虑以下依赖关系：</p>
+<!-- prettier-ignore -->
+<ul>
+<li>项目依赖 <code>foo</code> 和 <code>bar</code>。</li>
+<li><code>foo</code> 有两个版本，1.0.0 和 2.0.0：<ul>
+<li><code>foo 1.0.0</code> 没有依赖。</li>
+<li><code>foo 2.0.0</code> 依赖 <code>lib==2.0.0</code>。</li>
+</ul>
+</li>
+<li><code>bar</code> 有两个版本，1.0.0 和 2.0.0：<ul>
+<li><code>bar 1.0.0</code> 没有依赖。</li>
+<li><code>bar 2.0.0</code> 依赖 <code>lib==1.0.0</code></li>
+</ul>
+</li>
+<li><code>lib</code> 有两个版本，1.0.0 和 2.0.0。两个版本都没有依赖。</li>
+</ul>
+<p>在这个示例中，必须选择 <code>foo</code> 和 <code>bar</code> 的某个版本；然而，确定选择哪个版本需要考虑 <code>foo</code> 和 <code>bar</code> 每个版本的依赖关系。<code>foo 2.0.0</code> 和 <code>bar 2.0.0</code> 无法一起安装，因为它们对 <code>lib</code> 的版本要求存在冲突，因此解析器必须选择 <code>foo 1.0.0</code>（搭配 <code>bar 2.0.0</code>）或 <code>bar 1.0.0</code>（搭配 <code>foo 2.0.0</code>）。两者都是有效解，不同的解析算法可能会产生不同的结果。</p>
+<h2 id="platform-markers"><a class="toclink" href="#platform-markers">平台标记（Platform Markers）</a></h2>
+<p>标记（markers）允许为需求附加一个表达式，用于指示该依赖应在何时使用。例如，<code>bar ; python_version &lt; "3.9"</code> 表示 <code>bar</code> 仅应在 Python 3.8 及更早版本上安装。</p>
+<p>标记用于根据当前环境或平台调整包的依赖关系。例如，标记可用于按操作系统、CPU 架构、Python 版本、Python 实现等修改依赖关系。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>有关标记的更多详细信息，请参阅 Python Packaging 文档中的<a href="https://packaging.python.org/en/latest/specifications/dependency-specifiers/#environment-markers">环境标记</a>部分。</p>
+</div>
+<p>标记对解析很重要，因为它们的值会改变所需的依赖关系。通常，Python 包解析器使用 <em>当前</em> 平台的标记来确定要使用哪些依赖，因为包通常是在当前平台上 <em>安装</em> 的。然而，对于 <em>锁定（locking）</em> 依赖来说，这会带来问题——锁文件只能在与创建锁文件相同平台的开发者那里工作。为了解决这个问题，出现了平台无关的或"通用（universal）"解析器。</p>
+<p>uv 同时支持<a href="#platform-specific-resolution">平台特定解析</a>和<a href="#universal-resolution">通用解析</a>。</p>
+<h2 id="platform-specific-resolution"><a class="toclink" href="#platform-specific-resolution">平台特定解析（Platform-specific Resolution）</a></h2>
+<p>默认情况下，uv 的 pip 接口，即 <a href="../../pip/compile/"><code>uv pip compile</code></a>，会生成平台特定的解析结果，与 <code>pip-tools</code> 类似。在 uv 的项目接口中无法使用平台特定解析。</p>
+<p>uv 还支持通过 <code>--python-platform</code> 和 <code>--python-version</code> 选项为特定的、替代的平台和 Python 版本进行解析。例如，如果在 macOS 上使用 Python 3.12，可以使用 <code>uv pip compile --python-platform linux --python-version 3.10 requirements.in</code> 来为 Linux 上的 Python 3.10 生成解析结果。与通用解析不同，在平台特定解析期间，提供的 <code>--python-version</code> 是要使用的确切 Python 版本，而不是下限。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Python 的环境标记暴露了关于当前机器的远比简单的 <code>--python-platform</code> 参数所能表达的更多信息。例如，macOS 上的 <code>platform_version</code> 标记包含内核构建的时间，这（理论上）可以被编码在包需求中。uv 的解析器会尽力生成与目标 <code>--python-platform</code> 上运行的任何机器兼容的解析结果，这对于大多数用例来说应该足够了，但对于复杂的包和平台组合可能会丢失一些精度。</p>
+</div>
+<h2 id="universal-resolution"><a class="toclink" href="#universal-resolution">通用解析（Universal Resolution）</a></h2>
+<p>uv 的锁文件（<code>uv.lock</code>）是通过通用解析创建的，可跨平台移植。这确保了无论操作系统、架构和 Python 版本如何，依赖关系都被锁定给项目中的所有协作者。uv 锁文件由<a href="../projects/">项目</a>命令（如 <code>uv lock</code>、<code>uv sync</code> 和 <code>uv add</code>）创建和修改。</p>
+<p>通用解析也可在 uv 的 pip 接口中使用，即 <a href="../../pip/compile/"><code>uv pip compile</code></a>，通过 <code>--universal</code> 标志启用。生成的 requirements 文件将包含标记，以指示每个依赖适用于哪个平台。</p>
+<p>在通用解析期间，如果不同平台需要不同版本，一个包可能会以不同版本或 URL 多次列出——标记决定将使用哪个版本。通用解析通常比平台特定解析受到更多约束，因为我们需要考虑所有标记的需求。</p>
+<p>在通用解析期间，所有必需的包必须与 <code>pyproject.toml</code> 中声明的 <code>requires-python</code> 的 <em>整个</em> 范围兼容。例如，如果项目的 <code>requires-python</code> 是 <code>&gt;=3.8</code>，而某个依赖的所有版本都要求 Python 3.9 或更高版本，则解析将失败，因为该依赖缺少适用于（例如）Python 3.8（项目支持范围的下限）的可用版本。换句话说，项目的 <code>requires-python</code> 必须是其所有依赖的 <code>requires-python</code> 的子集。</p>
+<p>为给定依赖选择兼容版本时，uv 将（<a href="#multi-version-resolution">默认情况下</a>）尝试为每个受支持的 Python 版本选择最新的兼容版本。例如，如果项目的 <code>requires-python</code> 是 <code>&gt;=3.8</code>，而某个依赖的最新版本要求 Python 3.9 或更高版本，而所有先前版本都支持 Python 3.8，则解析器将为运行 Python 3.9 或更高版本的用户选择最新版本，为运行 Python 3.8 的用户选择先前版本。</p>
+<p>在评估依赖的 <code>requires-python</code> 范围时，uv 仅考虑下限，完全忽略上限。例如，<code>&gt;=3.8, &lt;4</code> 被视为 <code>&gt;=3.8</code>。遵循 <code>requires-python</code> 的上限通常会导致形式上正确但实际不正确的解析，因为解析器会回溯到第一个省略上限的已发布版本（参见：<a href="https://discuss.python.org/t/requires-python-upper-limits/12663"><code>Requires-Python</code> 上限</a>）。</p>
+<h2 id="limited-resolution-environments"><a class="toclink" href="#limited-resolution-environments">限定解析环境（Limited Resolution Environments）</a></h2>
+<p>默认情况下，通用解析器会尝试为所有平台和 Python 版本求解。</p>
+<p>如果您的项目仅支持有限的平台或 Python 版本集合，可以通过 <code>environments</code> 设置来约束求解的平台集合，该设置接受 <a href="https://packaging.python.org/en/latest/specifications/dependency-specifiers/#environment-markers">PEP 508 环境标记</a>列表。换句话说，您可以使用 <code>environments</code> 设置来 <em>缩减</em> 支持的平台集合。</p>
+<p>例如，要将锁文件约束为 macOS 和 Linux，并避免为 Windows 求解：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">[tool.uv]</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">environments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="s2">&quot;sys_platform == &#39;darwin&#39;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="s2">&quot;sys_platform == &#39;linux&#39;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">]</span>
+</code></pre></div>
+<p>或者，避免为替代的 Python 实现求解：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">[tool.uv]</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">environments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s2">&quot;implementation_name == &#39;cpython&#39;&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">]</span>
+</code></pre></div>
+<p><code>environments</code> 设置中的条目必须是互斥的（即它们不能重叠）。例如，<code>sys_platform == 'darwin'</code> 和 <code>sys_platform == 'linux'</code> 是互斥的，但 <code>sys_platform == 'darwin'</code> 和 <code>python_version &gt;= '3.9'</code> 不是，因为两者可能同时为真。</p>
+<h2 id="required-environments"><a class="toclink" href="#required-environments">必需环境（Required Environments）</a></h2>
+<p>在 Python 生态系统中，包可以以源码分发（source distributions）、构建分发（wheels）或两者兼有的形式发布；但要安装包，需要构建分发。如果包缺少构建分发，或者缺少适用于当前平台或 Python 版本的构建分发（构建分发通常是平台特定的），uv 将尝试从源码构建包，然后安装生成的构建分发。</p>
+<p>某些包（如 PyTorch）发布了构建分发，但省略了源码分发。此类包 <em>仅</em> 可在有构建分发的平台上安装。例如，如果某个包发布了适用于 Linux 的构建分发，但没有适用于 macOS 或 Windows 的，则该包 <em>仅</em> 可在 Linux 上安装。</p>
+<p>缺少源码分发的包会给通用解析带来问题，因为通常至少会有一个平台或 Python 版本无法安装该包。</p>
+<p>默认情况下，uv 要求每个此类包至少包含一个与目标 Python 版本兼容的 wheel。<code>required-environments</code> 设置可用于确保生成的解析结果包含特定平台的 wheel，或在没有此类 wheel 可用时失败。该设置接受 <a href="https://packaging.python.org/en/latest/specifications/dependency-specifiers/#environment-markers">PEP 508 环境标记</a>列表。</p>
+<p><code>environments</code> 设置 <em>限制</em> 了 uv 在解析依赖时将考虑的环境集合，而 <code>required-environments</code> 则 <em>扩展</em> 了 uv 在解析依赖时 <em>必须</em> 支持的平台集合。</p>
+<p>例如，<code>environments = ["sys_platform == 'darwin'"]</code> 会将 uv 限制为仅为 macOS 求解（忽略 Linux 和 Windows）。另一方面，<code>required-environments = ["sys_platform == 'darwin'"]</code> 将 <em>要求</em> 任何没有源码分发的包必须包含 macOS 的 wheel 才能安装（如果没有此类 wheel 可用则会失败）。</p>
+<p>在实践中，<code>required-environments</code> 对于声明对非最新平台的显式支持非常有用，因为这通常需要回溯到这些包的最新发布版本之前。例如，要保证任何仅构建分发的包包含对 Intel macOS 的支持：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">[tool.uv]</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">required-environments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="s2">&quot;sys_platform == &#39;darwin&#39; and platform_machine == &#39;x86_64&#39;&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">]</span>
+</code></pre></div>
+<h2 id="common-marker-values"><a class="toclink" href="#common-marker-values">常见标记值（Common Marker Values）</a></h2>
+<p><code>environments</code> 和 <code>required-environments</code> 设置接受 <a href="https://packaging.python.org/en/latest/specifications/dependency-specifiers/#environment-markers">PEP 508 环境标记</a>。这些标记的值源自 Python 运行时（例如 <a href="https://docs.python.org/3/library/sys.html#sys.platform"><code>sys.platform</code></a>、<a href="https://docs.python.org/3/library/platform.html#platform.machine"><code>platform.machine()</code></a>、<a href="https://docs.python.org/3/library/platform.html#platform.system"><code>platform.system()</code></a> 和 <a href="https://docs.python.org/3/library/os.html#os.name"><code>os.name</code></a>）。</p>
+<p>为便于快速参考，各平台最常见的标记值如下：</p>
+<table>
+<thead>
+<tr>
+<th>标记（Marker）</th>
+<th>Linux</th>
+<th>macOS</th>
+<th>Windows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sys_platform</code></td>
+<td><code>'linux'</code></td>
+<td><code>'darwin'</code></td>
+<td><code>'win32'</code></td>
+</tr>
+<tr>
+<td><code>platform_system</code></td>
+<td><code>'Linux'</code></td>
+<td><code>'Darwin'</code></td>
+<td><code>'Windows'</code></td>
+</tr>
+<tr>
+<td><code>platform_machine</code>（x86-64）</td>
+<td><code>'x86_64'</code></td>
+<td><code>'x86_64'</code></td>
+<td><code>'AMD64'</code></td>
+</tr>
+<tr>
+<td><code>platform_machine</code>（ARM64）</td>
+<td><code>'aarch64'</code></td>
+<td><code>'arm64'</code></td>
+<td><code>'ARM64'</code></td>
+</tr>
+<tr>
+<td><code>os_name</code></td>
+<td><code>'posix'</code></td>
+<td><code>'posix'</code></td>
+<td><code>'nt'</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在 Windows 上，即使在 64 位系统上，<code>sys_platform</code> 也始终是 <code>'win32'</code>。</p>
+</div>
+<p>您可以通过运行以下命令检查当前平台的值：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gp">$ </span>uvx<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sysconfig; print(sysconfig.get_config_vars())&quot;</span>
+</code></pre></div>
+<h2 id="dependency-preferences"><a class="toclink" href="#dependency-preferences">依赖偏好（Dependency Preferences）</a></h2>
+<p>如果解析输出文件存在，即 uv 锁文件（<code>uv.lock</code>）或 requirements 输出文件（<code>requirements.txt</code>），uv 将 <em>偏好</em> 其中列出的依赖版本。类似地，如果将包安装到虚拟环境中，uv 将偏好已安装的版本（如果存在）。这意味着锁定或已安装的版本不会更改，除非请求了不兼容的版本或通过 <code>--upgrade</code> 显式请求升级。</p>
+<h2 id="resolution-strategy"><a class="toclink" href="#resolution-strategy">解析策略（Resolution Strategy）</a></h2>
+<p>默认情况下，uv 尝试使用每个包的最新版本。例如，<code>uv pip install flask&gt;=2.0.0</code> 将安装 Flask 的最新版本，例如 3.0.0。如果 <code>flask&gt;=2.0.0</code> 是项目的依赖，则只会使用 <code>flask</code> 3.0.0。这一点很重要，例如，因为运行测试不会检查项目是否实际与其声明的 <code>flask</code> 2.0.0 下限兼容。</p>
+<p>使用 <code>--resolution lowest</code>，uv 将为所有依赖（直接和间接/传递依赖）安装尽可能最低的版本。或者，<code>--resolution lowest-direct</code> 将为所有直接依赖使用最低兼容版本，同时为所有其他依赖使用最新兼容版本。uv 将始终为构建依赖使用最新版本。</p>
+<p>例如，给定以下 <code>requirements.in</code> 文件：</p>
+<div class="highlight"><span class="filename">requirements.in</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">flask</span><span class="o">&gt;=</span><span class="mf">2.0.0</span>
+</code></pre></div>
+<p>运行 <code>uv pip compile requirements.in -o requirements.txt</code> 将生成以下 <code>requirements.txt</code> 文件：</p>
+<div class="highlight"><span class="filename">requirements.txt</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># This file was autogenerated by uv via the following command:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">#    uv pip compile requirements.in -o requirements.txt</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">blinker</span><span class="o">==</span><span class="mf">1.7.0</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="c1"># via flask</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">click</span><span class="o">==</span><span class="mf">8.1.7</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="c1"># via flask</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">flask</span><span class="o">==</span><span class="mf">3.0.0</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">itsdangerous</span><span class="o">==</span><span class="mf">2.1.2</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="c1"># via flask</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">jinja2</span><span class="o">==</span><span class="mf">3.1.2</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="c1"># via flask</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">markupsafe</span><span class="o">==</span><span class="mf">2.1.3</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="c1"># via</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="c1">#   jinja2</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="c1">#   werkzeug</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="n">werkzeug</span><span class="o">==</span><span class="mf">3.0.1</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="c1"># via flask</span>
+</code></pre></div>
+<p>然而，<code>uv pip compile --resolution lowest requirements.in -o requirements.txt</code> 将生成：</p>
+<div class="highlight"><span class="filename">requirements.txt</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># This file was autogenerated by uv via the following command:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">#    uv pip compile --resolution lowest requirements.in -o requirements.txt</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">click</span><span class="o">==</span><span class="mf">7.1.2</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="c1"># via flask</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">flask</span><span class="o">==</span><span class="mf">2.0.0</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">itsdangerous</span><span class="o">==</span><span class="mf">2.0.0</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="c1"># via flask</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">jinja2</span><span class="o">==</span><span class="mf">3.0.0</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="c1"># via flask</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">markupsafe</span><span class="o">==</span><span class="mf">2.0.0</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="c1"># via jinja2</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">werkzeug</span><span class="o">==</span><span class="mf">2.0.0</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="c1"># via flask</span>
+</code></pre></div>
+<p>发布库时，建议在持续集成中分别使用 <code>--resolution lowest</code> 或 <code>--resolution lowest-direct</code> 运行测试，以确保与声明的下限兼容。</p>
+<h2 id="pre-release-handling"><a class="toclink" href="#pre-release-handling">预发布版本处理（Pre-release Handling）</a></h2>
+<p>默认情况下，uv 在两种情况下会在依赖解析期间接受预发布版本：</p>
+<ol>
+<li>如果包是直接依赖，且其版本说明符包含预发布版本说明符（例如 <code>flask&gt;=2.0.0rc1</code>）。</li>
+<li>如果包 <em>所有</em> 已发布的版本都是预发布版本。</li>
+</ol>
+<p>如果依赖解析因传递预发布版本而失败，uv 将提示使用 <code>--prerelease allow</code> 来允许所有依赖的预发布版本。</p>
+<p>或者，可以将传递依赖添加为<a href="#dependency-constraints">约束</a>或直接依赖（即在 <code>requirements.in</code> 或 <code>pyproject.toml</code> 中），并附带预发布版本说明符（例如 <code>flask&gt;=2.0.0rc1</code>），以选择为该特定依赖启用预发布版本支持。</p>
+<p>预发布版本是<a href="https://pubgrub-rs-guide.netlify.app/limitations/prerelease_versions">出了名的难以建模</a>，并且是其他打包工具中常见的错误来源。uv 的预发布版本处理是 <em>有意</em> 限制的，需要用户主动选择启用预发布版本以确保正确性。</p>
+<p>更多详情，请参见<a href="../../pip/compatibility/#pre-release-compatibility">预发布版本兼容性</a>。</p>
+<h2 id="multi-version-resolution"><a class="toclink" href="#multi-version-resolution">多版本解析（Multi-version Resolution）</a></h2>
+<p>在通用解析期间，一个包可能会在同一锁文件中以不同版本或 URL 多次列出，因为不同平台或 Python 版本可能需要不同的版本。</p>
+<p><code>--fork-strategy</code> 设置可用于控制 uv 如何在 (1) 最小化所选版本数量和 (2) 为每个平台选择尽可能最新的版本之间进行权衡。前者导致跨平台更大的一致性，而后者导致在可能的情况下使用更新的包版本。</p>
+<p>默认情况下（<code>--fork-strategy requires-python</code>），uv 将优化为每个受支持的 Python 版本选择每个包的最新版本，同时最小化跨平台的所选版本数量。</p>
+<p>例如，当使用 Python 要求 <code>&gt;=3.8</code> 解析 <code>numpy</code> 时，uv 将选择以下版本：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>numpy==1.24.4 ; python_version == &quot;3.8&quot;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>numpy==2.0.2 ; python_version == &quot;3.9&quot;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>numpy==2.2.0 ; python_version &gt;= &quot;3.10&quot;
+</code></pre></div>
+<p>此解析反映了 NumPy 2.2.0 及更高版本至少需要 Python 3.10，而较早版本与 Python 3.8 和 3.9 兼容。</p>
+<p>在 <code>--fork-strategy fewest</code> 下，uv 将改为最小化每个包的所选版本数量，偏好与更广泛的受支持 Python 版本或平台兼容的较旧版本。</p>
+<p>例如，在上述场景中，uv 将为所有 Python 版本选择 <code>numpy==1.24.4</code>，而不是为 Python 3.9 升级到 <code>numpy==2.0.2</code> 和为 Python 3.10 及更高版本升级到 <code>numpy==2.2.0</code>。</p>
+<h2 id="dependency-constraints"><a class="toclink" href="#dependency-constraints">依赖约束（Dependency Constraints）</a></h2>
+<p>与 pip 类似，uv 支持约束文件（<code>--constraint constraints.txt</code>），用于缩小给定包的可接受版本集合。约束文件类似于 requirements 文件，但仅作为约束列出不会导致包被包含到解析中。相反，约束仅在请求的包已作为直接或传递依赖被引入时才生效。约束对于缩小传递依赖的可用版本范围非常有用。它们也可用于保持解析结果与某组其他已解析版本同步，无论两者之间有哪些包重叠。</p>
+<h2 id="dependency-overrides"><a class="toclink" href="#dependency-overrides">依赖覆盖（Dependency Overrides）</a></h2>
+<p>依赖覆盖允许通过覆盖包的声明依赖来绕过不成功或不理想的解析结果。覆盖是一种有用的最后手段，适用于您 <em>知道</em> 某个依赖与某个包的特定版本兼容，尽管元数据表明不兼容的情况。</p>
+<p>例如，如果传递依赖声明了需求 <code>pydantic&gt;=1.0,&lt;2.0</code>，但 <em>确实</em> 可以与 <code>pydantic&gt;=2.0</code> 一起工作，用户可以通过在覆盖中包含 <code>pydantic&gt;=1.0,&lt;3</code> 来覆盖声明的依赖，从而允许解析器选择更新版本的 <code>pydantic</code>。</p>
+<p>具体来说，如果 <code>pydantic&gt;=1.0,&lt;3</code> 被包含为覆盖，uv 将忽略所有对 <code>pydantic</code> 的声明需求，用覆盖替换它们。在上面的示例中，<code>pydantic&gt;=1.0,&lt;2.0</code> 需求将被完全忽略，取而代之的是 <code>pydantic&gt;=1.0,&lt;3</code>。</p>
+<p>约束只能 <em>缩小</em> 包的可接受版本集合，而覆盖可以 <em>扩大</em> 可接受版本集合，为错误的上限版本边界提供了逃生通道。与约束一样，覆盖不会添加对包的依赖，仅在包作为直接或传递依赖被请求时才生效。</p>
+<p>在 <code>pyproject.toml</code> 中，使用 <code>tool.uv.override-dependencies</code> 来定义覆盖列表。在 pip 兼容接口中，可以使用 <code>--override</code> 选项来传递与约束文件格式相同的文件。</p>
+<p>如果为同一个包提供了多个覆盖，必须使用<a href="#platform-markers">标记</a>来区分它们。如果包有一个带标记的依赖，在使用覆盖时它会被无条件替换——标记是否评估为 true 或 false 并不重要。</p>
+<h2 id="dependency-metadata"><a class="toclink" href="#dependency-metadata">依赖元数据（Dependency Metadata）</a></h2>
+<p>在解析期间，uv 需要解析它遇到的每个包的元数据，以确定其依赖关系。此元数据通常作为包索引中的静态文件可用；然而，对于仅提供源码分发的包，元数据可能无法预先获取。</p>
+<p>在这种情况下，uv 必须构建包以确定其元数据（例如，通过调用 <code>setup.py</code>）。这可能会在解析期间引入性能损失。此外，它还要求包能够在所有平台上构建，而这可能并不成立。</p>
+<p>例如，您可能有一个只应在 Linux 上构建和安装的包，但在 macOS 或 Windows 上无法成功构建。虽然 uv 可以为此场景构建一个完全有效的锁文件，但这样做需要构建该包，而这在非 Linux 平台上会失败。</p>
+<p><code>tool.uv.dependency-metadata</code> 表可用于为此类依赖预先提供静态元数据，从而允许 uv 跳过构建步骤并使用提供的元数据。</p>
+<p>例如，要为 <code>chumpy</code> 预先提供元数据，请在其 <code>pyproject.toml</code> 中包含 <code>dependency-metadata</code>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">[[tool.uv.dependency-metadata]]</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;chumpy&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.70&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">requires-dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy&gt;=1.8.1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;scipy&gt;=0.13.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;six&gt;=1.11.0&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>这些声明适用于包 <em>没有</em> 预先声明静态元数据的情况，尽管它们对于需要<a href="../projects/config/#build-isolation">禁用构建隔离</a>的包也很有用。在这种情况下，预先声明包元数据可能比在解析包之前创建自定义构建环境更容易。</p>
+<p>例如，过去版本的 <code>flash-attn</code> 没有声明静态元数据。通过预先声明 <code>flash-attn</code> 的元数据，uv 可以解析 <code>flash-attn</code> 而无需从源码构建包（这本身需要安装 <code>torch</code>）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">[project]</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;project&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">requires-python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;=3.12&quot;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;flash-attn&quot;</span><span class="p">]</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">[tool.uv.sources]</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">flash-attn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/Dao-AILab/flash-attention&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;v2.6.3&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">[[tool.uv.dependency-metadata]]</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;flash-attn&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2.6.3&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="n">requires-dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;torch&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;einops&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>与依赖覆盖类似，<code>tool.uv.dependency-metadata</code> 也可用于包的元数据不正确或不完整的情况，或者当包在包索引中不可用时。依赖覆盖允许全局覆盖包的允许版本，而元数据覆盖允许覆盖 <em>特定包</em> 的声明元数据。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>tool.uv.dependency-metadata</code> 中的 <code>version</code> 字段对于基于注册表的依赖是可选的（省略时，uv 将假定元数据适用于包的所有版本），但对于直接 URL 依赖（如 Git 依赖）是 <em>必需的</em>。</p>
+</div>
+<p><code>tool.uv.dependency-metadata</code> 表中的条目遵循 <a href="https://packaging.python.org/en/latest/specifications/core-metadata/">Metadata 2.3</a> 规范，不过 uv 仅读取 <code>name</code>、<code>version</code>、<code>requires-dist</code>、<code>requires-python</code> 和 <code>provides-extra</code>。<code>version</code> 字段也被视为可选的。如果省略，元数据将用于指定包的所有版本。</p>
+<h2 id="conflicting-dependencies"><a class="toclink" href="#conflicting-dependencies">冲突依赖（Conflicting Dependencies）</a></h2>
+<p>uv 要求项目声明的所有依赖彼此兼容，并在创建锁文件时一起解析所有依赖。这包括项目依赖、可选依赖（"extras"）和依赖组（开发依赖）。</p>
+<p>如果在一个 extra 中声明的依赖与另一个 extra 中的依赖不兼容，uv 将无法解析项目需求并报错。例如，考虑两组相互冲突的可选依赖：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">[project.optional-dependencies]</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">extra1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.1.2&quot;</span><span class="p">]</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">extra2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.0.0&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>如果您使用上述依赖运行 <code>uv lock</code>，解析将失败：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="gp">$ </span>uv<span class="w"> </span>lock
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="go">  x No solution found when resolving dependencies:</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="go">  `-&gt; Because myproject[extra2] depends on numpy==2.0.0 and myproject[extra1] depends on numpy==2.1.2, we can conclude that myproject[extra1] and</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="go">      myproject[extra2] are incompatible.</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="go">      And because your project requires myproject[extra1] and myproject[extra2], we can conclude that your projects&#39;s requirements are unsatisfiable.</span>
+</code></pre></div>
+<p>为了解决这个问题，uv 支持显式声明冲突。如果您指定 <code>extra1</code> 和 <code>extra2</code> 是冲突的，uv 将分别解析它们。在 <code>tool.uv</code> 部分中指定冲突：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">[tool.uv]</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="p">[</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">extra</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;extra1&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">extra</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;extra2&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="p">]</span>
+</code></pre></div>
+<p>现在，运行 <code>uv lock</code> 将成功。但是，您不能同时安装 <code>extra1</code> 和 <code>extra2</code>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="gp">$ </span>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>extra1<span class="w"> </span>--extra<span class="w"> </span>extra2
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="go">Resolved 3 packages in 14ms</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="go">error: extra `extra1`, extra `extra2` are incompatible with the declared conflicts: {`myproject[extra1]`, `myproject[extra2]`}</span>
+</code></pre></div>
+<p>发生此错误是因为同时安装 <code>extra1</code> 和 <code>extra2</code> 会导致将两个不同版本的包安装到同一环境中。</p>
+<p>上述处理冲突可选依赖的策略也适用于依赖组：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">[dependency-groups]</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">group1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.1.2&quot;</span><span class="p">]</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">group2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.0.0&quot;</span><span class="p">]</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">[tool.uv]</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="p">[</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;group1&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;group2&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="p">]</span>
+</code></pre></div>
+<p>与冲突 extras 的唯一区别是，您需要使用 <code>group</code> 键而不是 <code>extra</code>。</p>
+<p>当使用包含多个项目的工作空间（workspace）时，同样的限制适用——uv 要求所有工作空间成员彼此兼容。类似地，可以跨工作空间成员声明冲突。</p>
+<p>例如，考虑以下工作空间：</p>
+<div class="highlight"><span class="filename">member1/pyproject.toml</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">[project]</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;member1&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="k">[project.optional-dependencies]</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">extra1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.1.2&quot;</span><span class="p">]</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">member2/pyproject.toml</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">[project]</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;member2&quot;</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">[project.optional-dependencies]</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="n">extra2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.0.0&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>要声明这些不同工作空间成员中 extras 之间的冲突，请使用 <code>package</code> 键：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">[tool.uv]</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span><span class="p">[</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">package</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;member1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">extra</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;extra1&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">package</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;member2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">extra</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;extra2&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="p">]</span>
+</code></pre></div>
+<p>一个工作空间成员的项目依赖（即 <code>project.dependencies</code>）也可能与另一个成员的 extra 冲突，例如：</p>
+<div class="highlight"><span class="filename">member1/pyproject.toml</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">[project]</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;member1&quot;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.1.2&quot;</span><span class="p">]</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">member2/pyproject.toml</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">[project]</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;member2&quot;</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="k">[project.optional-dependencies]</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="n">extra2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.0.0&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>此冲突也可以使用 <code>package</code> 键声明：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">[tool.uv]</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span><span class="p">[</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">package</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;member1&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">package</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;member2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">extra</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;extra2&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="p">]</span>
+</code></pre></div>
+<p>类似地，某些工作空间成员可能具有冲突的项目依赖：</p>
+<div class="highlight"><span class="filename">member1/pyproject.toml</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">[project]</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;member1&quot;</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.1.2&quot;</span><span class="p">]</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">member2/pyproject.toml</span><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">[project]</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;member2&quot;</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numpy==2.0.0&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>此冲突也可以使用 <code>package</code> 键声明：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">[tool.uv]</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="n">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="p">[</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">package</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;member1&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="n">package</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;member2&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="p">]</span>
+</code></pre></div>
+<p>这些工作空间成员将无法一起安装，例如，工作空间根目录不能定义：</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">[project]</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;root&quot;</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;member1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;member2&quot;</span><span class="p">]</span>
+</code></pre></div>
+<h2 id="lower-bounds"><a class="toclink" href="#lower-bounds">下限（Lower Bounds）</a></h2>
+<p>默认情况下，<code>uv add</code> 会为依赖添加下限，并且在使用 uv 管理项目时，如果直接依赖没有下限，uv 会发出警告。</p>
+<p>下限在"正常路径"中并不关键，但它们对于存在依赖冲突的情况很重要。例如，考虑一个需要两个包的项目，而这些包具有冲突的依赖关系。解析器需要检查两个包在约束范围内的所有版本组合——如果所有组合都冲突，则会报告错误，因为依赖关系无法满足。如果没有下限，解析器可以（而且通常会）回溯到包的最旧版本。这不仅因为速度慢而成为问题，旧版本的包通常无法构建，或者解析器最终可能选择一个足够旧的版本，它既不依赖冲突的包，也无法与您的代码一起工作。</p>
+<p>下限在编写库时尤其关键。声明库所依赖的每个依赖的最低版本，并验证这些下限是否正确非常重要——使用 <a href="#resolution-strategy"><code>--resolution lowest</code> 或 <code>--resolution lowest-direct</code></a> 进行测试。否则，用户可能会收到库依赖的旧的不兼容版本，库将因意外错误而失败。</p>
+<h2 id="reproducible-resolutions"><a class="toclink" href="#reproducible-resolutions">可复现解析（Reproducible Resolutions）</a></h2>
+<p>uv 支持 <code>--exclude-newer</code> 选项，将解析限制在特定日期之前上传的发行版，从而无论新包发布如何，都能复现安装。该日期与每个单独发行版制品的上传时间（即每个文件上传到包索引的时间）进行比较，而不是包版本的发布日期。日期可以指定为 <a href="https://www.rfc-editor.org/rfc/rfc3339.html">RFC 3339</a> 时间戳（例如 <code>2006-12-02T02:07:43Z</code>）或系统配置时区中相同格式的本地日期（例如 <code>2006-12-02</code>）。</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>包索引必须支持 <a href="https://peps.python.org/pep-0700/"><code>PEP 700</code></a> 中指定的 <code>upload-time</code> 字段。如果给定发行版不存在该字段，则该发行版将被视为不可用，除非通过 <code>--exclude-newer-package &lt;package&gt;=false</code> 选择退出该包，或者索引配置了其自身的 <code>exclude-newer</code> 值，或者通过 <code>[[tool.uv.index]] exclude-newer = false</code> 选择退出该索引。PyPI 为所有包提供了 <code>upload-time</code>。</p>
+</div>
+<p>为了确保可复现性，无法满足的解析消息不会提及由于 <code>--exclude-newer</code> 标志而排除了发行版——更新的发行版将被视为不存在。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>--exclude-newer</code> 选项仅适用于从注册表读取的包（而不是例如 Git 依赖）。此外，在使用 <code>uv pip</code> 接口时，uv 不会降级先前安装的包，除非提供了 <code>--reinstall</code> 标志，在这种情况下 uv 将执行新的解析。</p>
+</div>
+<p>此选项也支持在 <code>pyproject.toml</code> 中使用，例如：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>[tool.uv]
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>exclude-newer = &quot;2006-12-02T02:07:43Z&quot;
+</code></pre></div>
+<p>在持久化配置中指定时，不允许使用本地日期时间。</p>
+<p>也可以为特定包指定值，例如 <code>--exclude-newer-package setuptools=2006-12-02</code>，或：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>[tool.uv]
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>exclude-newer-package = { setuptools = &quot;2006-12-02T02:07:43Z&quot; }
+</code></pre></div>
+<p>包选项也接受 <code>&lt;package&gt;=false</code> 来选择退出该包的限制，例如 <code>--exclude-newer-package setuptools=false</code>，或：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>[tool.uv]
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>exclude-newer-package = { setuptools = false }
+</code></pre></div>
+<p>这对于临时使用更新版本的包或允许从不发布上传时间的索引解析包非常有用。</p>
+<p>包特定的值将优先于全局和索引特定的值。</p>
+<p>同样，单个索引可以覆盖全局截止时间：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>[tool.uv]
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>exclude-newer = &quot;2006-12-02T02:07:43Z&quot;
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>[[tool.uv.index]]
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>name = &quot;internal&quot;
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>url = &quot;https://internal.example.com/simple&quot;
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>exclude-newer = &quot;7 days&quot;
+</code></pre></div>
+<p>或者为该索引完全禁用它：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>[[tool.uv.index]]
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>name = &quot;internal&quot;
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>url = &quot;https://internal.example.com/simple&quot;
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>exclude-newer = false
+</code></pre></div>
+<p>这对于不发布 <code>upload-time</code> 的私有索引很有用，或者用于在保留全局行为的同时对特定索引应用不同的可复现性窗口。</p>
+<h2 id="dependency-cooldowns"><a class="toclink" href="#dependency-cooldowns">依赖冷却期（Dependency Cooldowns）</a></h2>
+<p>uv 还支持依赖"冷却期"，在此期间解析将忽略比指定时长更新的包。这是通过延迟包更新直到社区有机会审查新版本包来提高安全态势的好方法。</p>
+<p>此功能通过 <a href="#reproducible-resolutions"><code>exclude-newer</code> 选项</a>提供，并共享相同的语义。</p>
+<p>通过指定持续时间而不是绝对值来定义依赖冷却期。可以使用"友好"持续时间（例如 <code>24 hours</code>、<code>1 week</code>、<code>30 days</code>）或 ISO 8601 持续时间（例如 <code>PT24H</code>、<code>P7D</code>、<code>P30D</code>）。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>持续时间不遵循本地时区的语义，始终解析为固定的秒数，假设一天为 24 小时（例如，DST 转换被忽略）。不允许使用日历单位（如月和年），因为它们本质上是不一致的长度。</p>
+</div>
+<p>当使用持续时间进行解析时，时间戳是相对于当前时间计算的。当使用 <code>uv.lock</code> 文件时，时间戳包含在锁文件中。uv 不会在当前时间变化时更新锁文件，而是会在执行新解析时更新时间戳，例如当使用 <code>--upgrade</code> 或 <code>--refresh</code> 时。</p>
+<p>此选项也支持在 <code>pyproject.toml</code> 中使用，例如：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>[tool.uv]
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>exclude-newer = &quot;1 week&quot;
+</code></pre></div>
+<p>也可以为特定包指定值，例如 <code>--exclude-newer-package "setuptools=30 days"</code>，或：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>[tool.uv]
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>exclude-newer = &quot;1 week&quot;
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>exclude-newer-package = { setuptools = &quot;30 days&quot; }
+</code></pre></div>
+<h2 id="source-distribution"><a class="toclink" href="#source-distribution">源码分发（Source Distribution）</a></h2>
+<p><a href="https://peps.python.org/pep-0625/">PEP 625</a> 规定包必须以 gzip tarball（<code>.tar.gz</code>）归档格式分发源码分发。在此规范之前，也允许其他归档格式，为了向后兼容，需要支持这些格式。uv 支持读取和提取以下格式的归档：</p>
+<ul>
+<li>gzip tarball（<code>.tar.gz</code>、<code>.tgz</code>）</li>
+<li>bzip2 tarball（<code>.tar.bz2</code>、<code>.tbz</code>）</li>
+<li>xz tarball（<code>.tar.xz</code>、<code>.txz</code>）</li>
+<li>zstd tarball（<code>.tar.zst</code>）</li>
+<li>lzip tarball（<code>.tar.lz</code>）</li>
+<li>lzma tarball（<code>.tar.lzma</code>）</li>
+<li>zip（<code>.zip</code>）</li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>强烈建议不要使用 <code>.tar.gz</code> 以外的源码分发扩展名，因为这些扩展名在 Python 打包生态系统中并未得到广泛或一致的支持。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">已弃用</p>
+<p>对 <code>.tar.gz</code> 以外源码分发扩展名的支持已弃用，将在 uv 的未来版本中移除。</p>
+</div>
+<h2 id="lockfile-versioning"><a class="toclink" href="#lockfile-versioning">锁文件版本控制（Lockfile Versioning）</a></h2>
+<p><code>uv.lock</code> 文件使用版本化的模式（schema）。模式版本包含在锁文件的 <code>version</code> 字段中。</p>
+<p>任何给定版本的 uv 可以读取和写入具有相同模式版本的锁文件，但会拒绝具有更高模式版本的锁文件。例如，如果您的 uv 版本支持模式 v1，<code>uv lock</code> 在遇到具有模式 v2 的现有锁文件时将报错。</p>
+<p>支持模式 v2 的 uv 版本 <em>可能</em> 能够读取具有模式 v1 的锁文件，如果模式更新是向后兼容的。但是，这并不保证，uv 在遇到具有过时模式版本的锁文件时可能会退出并报错。</p>
+<p>模式版本被视为公共 API 的一部分，因此仅在小版本（minor releases）中作为破坏性变更进行提升（参见<a href="../../reference/policies/versioning/">版本控制</a>）。因此，给定 uv 小版本中的所有 uv 补丁版本（patch versions）都保证具有完全的锁文件兼容性。换句话说，锁文件可能仅在跨小版本时被拒绝。</p>
+<p>锁文件的 <code>revision</code> 字段用于跟踪锁文件的向后兼容更改。例如，向发行版添加新字段。对 <code>revision</code> 的更改不会导致旧版本 uv 报错。</p>
+<h2 id="learn-more"><a class="toclink" href="#learn-more">了解更多</a></h2>
+<p>有关解析器内部机制的更多详细信息，请参阅<a href="../../reference/internals/resolver/">解析器参考</a>文档。</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../indexes/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 包索引">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                包索引
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../build-backend/" class="md-footer__link md-footer__link--next" aria-label="下一页: 构建后端">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                构建后端
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <span class="version">v0.11.23</span> <a href="https://github.com/oaixnah" target="_blank">译者 oaixnah</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/astral-sh/uv" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://discord.com/invite/astral-sh" target="_blank" rel="noopener" title="discord.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M492.5 69.8c-.2-.3-.4-.6-.8-.7-38.1-17.5-78.4-30-119.7-37.1-.4-.1-.8 0-1.1.1s-.6.4-.8.8c-5.5 9.9-10.5 20.2-14.9 30.6-44.6-6.8-89.9-6.8-134.4 0-4.5-10.5-9.5-20.7-15.1-30.6-.2-.3-.5-.6-.8-.8s-.7-.2-1.1-.2C162.5 39 122.2 51.5 84.1 69c-.3.1-.6.4-.8.7C7.1 183.5-13.8 294.6-3.6 404.2c0 .3.1.5.2.8s.3.4.5.6c44.4 32.9 94 58 146.8 74.2.4.1.8.1 1.1 0s.7-.4.9-.7c11.3-15.4 21.4-31.8 30-48.8.1-.2.2-.5.2-.8s0-.5-.1-.8-.2-.5-.4-.6-.4-.3-.7-.4c-15.8-6.1-31.2-13.4-45.9-21.9-.3-.2-.5-.4-.7-.6s-.3-.6-.3-.9 0-.6.2-.9.3-.5.6-.7c3.1-2.3 6.2-4.7 9.1-7.1.3-.2.6-.4.9-.4s.7 0 1 .1c96.2 43.9 200.4 43.9 295.5 0 .3-.1.7-.2 1-.2s.7.2.9.4c2.9 2.4 6 4.9 9.1 7.2.2.2.4.4.6.7s.2.6.2.9-.1.6-.3.9-.4.5-.6.6c-14.7 8.6-30 15.9-45.9 21.8-.2.1-.5.2-.7.4s-.3.4-.4.7-.1.5-.1.8.1.5.2.8c8.8 17 18.8 33.3 30 48.8.2.3.6.6.9.7s.8.1 1.1 0c52.9-16.2 102.6-41.3 147.1-74.2.2-.2.4-.4.5-.6s.2-.5.2-.8c12.3-126.8-20.5-236.9-86.9-334.5zm-302 267.7c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.4 59.2-52.8 59.2m195.4 0c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.2 59.2-52.8 59.2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/uv/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/astral_sh" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "content.code.copy", "content.tabs.link", "navigation.path", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "navigation.tracking", "search.suggest", "search.highlight", "search.share", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
