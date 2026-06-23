@@ -1,9 +1,11 @@
 site_name: uv 中文文档
-copyright: v0.11.23 <a href="https://github.com/oaixnah" target="_blank">译者 oaixnah</a>
+copyright: <span class="version">v0.11.23</span> <a href="https://github.com/oaixnah" target="_blank">译者 oaixnah</a>
 theme:
   name: material
   logo: assets/logo-letter.svg
   favicon: assets/favicon.ico
+  icon:
+    repo: fontawesome/brands/github
   language: zh
   features:
     - content.code.annotate

@@ -26,6 +26,7 @@
   --md-default-bg-color--dark: var(--black);
   --md-primary-fg-color: var(--galaxy);
   --md-typeset-a-color: var(--flare);
+  --version-color: var(--white);
   --md-accent-fg-color: var(--cosmic);
 }
 
@@ -40,6 +41,7 @@
 
   --md-typeset-color: var(--white);
   --md-typeset-a-color: var(--radiate);
+  --version-color: var(--radiate);
   --md-typeset-mark-color: var(--sun);
 
   --md-code-fg-color: var(--white);
@@ -226,4 +228,8 @@ h3.cli-reference {
 modifications */
 .md-source-file__fact {
   visibility: hidden;
+}
+
+.version {
+  color: var(--version-color);
 }
